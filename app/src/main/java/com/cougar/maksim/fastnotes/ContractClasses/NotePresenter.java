@@ -50,18 +50,18 @@ public class NotePresenter implements NoteContract.Presenter {
     }
 
     @Override
-    public void updateNoteDate(Date date) {
+    public void setNoteDate(Date date) {
         mNote.setDate(date);
 
     }
 
     @Override
-    public void updateNoteTitle(String s) {
+    public void setNoteTitle(String s) {
         mNote.setTitle(s);
     }
 
     @Override
-    public void updateNoteContent(String s) {
+    public void setNoteContent(String s) {
         mNote.setData(s);
     }
 
@@ -83,18 +83,18 @@ public class NotePresenter implements NoteContract.Presenter {
         if(requestCode == REQUEST_DATE){
             Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             //TODO check external usage
-            updateNoteDate(date);
+            setNoteDate(date);
             updateDateView();
         }
 
         if(requestCode == REQUEST_STATUS){
             NoteStatus status = (NoteStatus) data.getSerializableExtra(StatusFragment.STATUS);
-            updateNoteStatus(status);
+            setNoteStatus(status);
             updateStatusView();
         }
     }
 
-    public void updateNoteStatus(NoteStatus status) {
+    public void setNoteStatus(NoteStatus status) {
         mNote.setStatus(status);
     }
 

@@ -200,7 +200,7 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
                 public void onClick(View v) {
                     FragmentManager fragmentManager = getFragmentManager();
                     if(fragmentManager!=null) {
-                        DeleteItemFragment deleteItemFragment = DeleteItemFragment.newInstance(mNote.getId());
+                        DeleteItemFragment deleteItemFragment = DeleteItemFragment.Companion.newInstance(mNote.getId());
                         deleteItemFragment.setTargetFragment(NoteListFragment.this, DELETE_NOTE);
                         deleteItemFragment.show(fragmentManager, DELETE_ITEM);
                     }

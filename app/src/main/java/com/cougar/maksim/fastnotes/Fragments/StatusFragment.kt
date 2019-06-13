@@ -1,5 +1,6 @@
 package com.cougar.maksim.fastnotes.Fragments
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
@@ -41,21 +42,20 @@ class StatusFragment : DialogFragment() {
         mStatusGroup = view.findViewById(R.id.statusRadioGroup)
 
         val statusList = NoteStatus.values()
-        for ((counter, dbStatus) in statusList.withIndex()) {
+        for (dbStatus in statusList) {
             val radioBtn = RadioButton(activity)
-            //TODO can be reworked with companion object ans stringvals without counter
             radioBtn.text = dbStatus.stringVal
-            radioBtn.id = counter
-            mStatusGroup.addView(radioBtn, counter)
+            radioBtn.id = dbStatus.ordinal
+            mStatusGroup.addView(radioBtn, dbStatus.ordinal)
             if (status.contentEquals(dbStatus.toString())) {
-                mStatusGroup.check(counter)
+                mStatusGroup.check(dbStatus.ordinal)
             }
         }
 
         return AlertDialog.Builder(activity)
                 .setTitle("Chose status")
                 .setView(mStatusGroup)
-                .setPositiveButton(android.R.string.ok) { dialog, which ->
+                .setPositiveButton(android.R.string.ok) { _, _ ->
                     val checkedId = mStatusGroup.checkedRadioButtonId
                     val selectedBtn: Button = mStatusGroup.findViewById(checkedId)
                     val noteStatus: NoteStatus = NoteStatus.values()[selectedBtn.id]

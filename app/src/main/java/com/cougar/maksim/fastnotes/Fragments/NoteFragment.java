@@ -39,8 +39,8 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     public static final int REQUEST_STATUS = 1;
 
 
-    public static NoteFragment newInstance(boolean isNewItem){
-        Bundle bundle=new Bundle();
+    public static NoteFragment newInstance(boolean isNewItem) {
+        Bundle bundle = new Bundle();
         bundle.putBoolean(NEW_ITEM, isNewItem);
 
         NoteFragment noteFragment = new NoteFragment();
@@ -48,8 +48,8 @@ public class NoteFragment extends Fragment implements NoteContract.View {
         return noteFragment;
     }
 
-    public static NoteFragment newInstance(UUID id){
-        Bundle bundle=new Bundle();
+    public static NoteFragment newInstance(UUID id) {
+        Bundle bundle = new Bundle();
         bundle.putSerializable(NOTE_ID, id);
 
         NoteFragment noteFragment = new NoteFragment();
@@ -61,13 +61,12 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mNotePresenter = new NotePresenter(this);
-        if(getArguments()!=null) {
+        if (getArguments() != null) {
             boolean isNewItem = getArguments().getBoolean(NEW_ITEM);
             UUID noteId = (UUID) getArguments().getSerializable(NOTE_ID);
 
             mNotePresenter.setData(isNewItem, noteId);
-        }
-        else {
+        } else {
             throw new RuntimeException("No args exception");
         }
     }
@@ -95,7 +94,7 @@ public class NoteFragment extends Fragment implements NoteContract.View {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mNotePresenter.updateNoteTitle(s.toString());
+                mNotePresenter.setNoteTitle(s.toString());
             }
 
             @Override
@@ -112,7 +111,7 @@ public class NoteFragment extends Fragment implements NoteContract.View {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mNotePresenter.updateNoteContent(s.toString());
+                mNotePresenter.setNoteContent(s.toString());
             }
 
             @Override
@@ -124,7 +123,7 @@ public class NoteFragment extends Fragment implements NoteContract.View {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO relocate to presenter
+                mNotePresenter.updateNote();
                 saveDataAndExit();
             }
         });
@@ -133,7 +132,7 @@ public class NoteFragment extends Fragment implements NoteContract.View {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
-                if(fragmentManager!=null) {
+                if (fragmentManager != null) {
                     DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(mNotePresenter.getDate());
                     datePickerFragment.setTargetFragment(NoteFragment.this, REQUEST_DATE);
                     datePickerFragment.show(fragmentManager, DIALOG_DATE);
@@ -144,9 +143,8 @@ public class NoteFragment extends Fragment implements NoteContract.View {
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getFragmentManager();
-                if(fragmentManager != null){
-                    //TODO open enter status fragment
-                    StatusFragment statusFragment =StatusFragment.Companion.newInstance(mNotePresenter.getStatus());
+                if (fragmentManager != null) {
+                    StatusFragment statusFragment = StatusFragment.Companion.newInstance(mNotePresenter.getStatus());
                     statusFragment.setTargetFragment(NoteFragment.this, REQUEST_STATUS);
                     statusFragment.show(fragmentManager, DIALOG_STATUS);
                 }
@@ -158,26 +156,10 @@ public class NoteFragment extends Fragment implements NoteContract.View {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*if(resultCode !=Activity.RESULT_OK){
-            return;
-        }
-
-        if(requestCode == REQUEST_DATE){
-            Date date = (Date)data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            mNotePresenter.updateNoteDate(date);
-            mNotePresenter.updateDateView();
-        }*/
         mNotePresenter.onActivityResult(requestCode, resultCode, data);
     }
 
-    /*@Override
-    public void onPause() {
-        super.onPause();
-        NoteLab.get(getActivity()).updateNote(mNote);
-    }*/
-
     public void saveDataAndExit() {
-        mNotePresenter.updateNote();
         Intent intent = new Intent();
         intent.putExtra("id", mNotePresenter.getId());
         if (getActivity() != null) {

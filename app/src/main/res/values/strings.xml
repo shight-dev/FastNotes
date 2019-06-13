@@ -11,4 +11,8 @@
     <string name="notification_channel_name">noteNotificationChannel</string>
     <string name="delete_item">Delete item</string>
     <string name="set_status">Set status</string>
+    <string name="always">Always</string>
+    <string name="never">Never</string>
+    <string name="at_day">At day</string>
+    <string name="all_before_day">All before day</string>
 </resources>

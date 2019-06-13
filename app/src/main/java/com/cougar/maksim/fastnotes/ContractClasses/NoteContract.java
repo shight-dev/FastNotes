@@ -19,10 +19,10 @@ public interface NoteContract {
 
     interface Presenter{
         void setData(boolean isNewItem, UUID id);
-        void updateNoteDate(Date date);
-        void updateNoteTitle(String s);
-        void updateNoteContent(String s);
-        void updateNoteStatus(NoteStatus status);
+        void setNoteDate(Date date);
+        void setNoteTitle(String s);
+        void setNoteContent(String s);
+        void setNoteStatus(NoteStatus status);
         void updateNote();
 
         void onActivityResult(int requestCode, int resultCode, Intent data);
