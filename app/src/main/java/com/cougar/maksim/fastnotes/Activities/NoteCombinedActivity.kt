@@ -10,7 +10,10 @@ import com.cougar.maksim.fastnotes.Fragments.NoteListFragment
 import com.cougar.maksim.fastnotes.R
 import java.util.*
 
-class NoteCombinedActivity:SingleSwapFragmentActivity() {
+class NoteCombinedActivity : SingleSwapFragmentActivity(), NoteListFragment.OnNoteListFragmentInteractionListener {
+    override fun onFragmentInteraction(id: UUID?) {
+        setSecondFragment(id)
+    }
 
     private val TODAY_EVENTS = "today_events"
 
@@ -18,18 +21,22 @@ class NoteCombinedActivity:SingleSwapFragmentActivity() {
     private val EXTRA_NEW_ITEM = "NEW_ITEM"
 
     override fun createStartFragment(): Fragment {
-        return if(!intent.getBooleanExtra(TODAY_EVENTS,false)){
+        return if (!intent.getBooleanExtra(TODAY_EVENTS, false)) {
             NoteListFragment.newInstance(false)
-        }
-        else{
+        } else {
             NoteListFragment.newInstance(true)
         }
     }
 
-    override fun createSecondFragment(): Fragment {
-        val isNewItem = intent.getBooleanExtra(EXTRA_NEW_ITEM, false)
-        val id = intent.getSerializableExtra(EXTRA_NOTE_ID) as UUID
-        return if (!isNewItem) {
+    override fun createSecondFragment(data: Any?): Fragment {
+        var id: UUID? = null
+        data?.let {
+            if (data is UUID) {
+                id = data
+            }
+        }
+        //TODO rework with kotlin not null features
+        return if (id != null) {
             NoteFragment.newInstance(id)
         } else {
             NoteFragment.newInstance(true)
@@ -43,10 +50,10 @@ class NoteCombinedActivity:SingleSwapFragmentActivity() {
                 .commit()
     }
 
-    override fun setSecondFragment() {
+    override fun setSecondFragment(data: Any?) {
         val fm = supportFragmentManager
         fm.beginTransaction()
-                .replace(R.id.fragment_container, createSecondFragment())
+                .replace(R.id.fragment_container, createSecondFragment(data))
                 .commit()
     }
 
@@ -58,12 +65,4 @@ class NoteCombinedActivity:SingleSwapFragmentActivity() {
         return intent
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK){
-            data?.let {
-                setSecondFragment()
-            }
-        }
-    }
 }

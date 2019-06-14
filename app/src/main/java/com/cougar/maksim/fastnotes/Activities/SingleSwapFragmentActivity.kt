@@ -11,11 +11,11 @@ abstract class SingleSwapFragmentActivity : AppCompatActivity() {
 
     protected abstract fun createStartFragment(): Fragment
 
-    protected abstract fun createSecondFragment(): Fragment
+    protected abstract fun createSecondFragment(data: Any?): Fragment
 
     protected abstract fun setStartFragment()
 
-    protected abstract fun setSecondFragment()
+    protected abstract fun setSecondFragment(data: Any?)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

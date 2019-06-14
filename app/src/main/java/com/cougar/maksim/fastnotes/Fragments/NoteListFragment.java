@@ -1,6 +1,7 @@
 package com.cougar.maksim.fastnotes.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
 public class NoteListFragment extends Fragment implements NoteListContract.View {
 
@@ -46,6 +48,8 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
     public static final String DELETE_ITEM = "delete_item";
 
     private NoteListPresenter mNoteListPresenter;
+
+    private OnNoteListFragmentInteractionListener listener = null;
 
     public static NoteListFragment newInstance(boolean todayEvents) {
         Bundle bundle = new Bundle();
@@ -214,10 +218,8 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
         public void onClick(View v) {
             //Intent intent = NoteActivity.newIntent(getActivity(), mNote.getId());
             //startActivityForResult(intent, UPDATE_NOTE);
-            //TODO send to activity to open second fragment
-            Activity parentActivity = getActivity();
-            if (parentActivity != null) {
-                parentActivity.setResult(Activity.RESULT_OK, NoteFragment.newIntent(mNote.getId()));
+            if(listener != null) {
+                listener.onFragmentInteraction(mNote.getId());
             }
         }
     }
@@ -252,5 +254,26 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
         public int getItemCount() {
             return mNotes.size();
         }
+    }
+
+    public interface OnNoteListFragmentInteractionListener {
+        void onFragmentInteraction(UUID id);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnNoteListFragmentInteractionListener) {
+            listener = (OnNoteListFragmentInteractionListener) context;
+        }
+        else {
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 }
