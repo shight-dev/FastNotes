@@ -1,5 +1,6 @@
 package com.cougar.maksim.fastnotes.Fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ import com.cougar.maksim.fastnotes.R;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class NoteListFragment extends Fragment implements NoteListContract.View {
 
@@ -45,11 +47,11 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
 
     private NoteListPresenter mNoteListPresenter;
 
-    public static NoteListFragment newInstance(boolean todayEvents){
+    public static NoteListFragment newInstance(boolean todayEvents) {
         Bundle bundle = new Bundle();
         bundle.putBoolean(TODAY_EVENTS, todayEvents);
 
-        NoteListFragment noteListFragment=new NoteListFragment();
+        NoteListFragment noteListFragment = new NoteListFragment();
         noteListFragment.setArguments(bundle);
         return noteListFragment;
     }
@@ -65,7 +67,7 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
             mNoteListPresenter.setTodayEvents(todayEvents);
 
         }
-        if(getArguments()!=null) {
+        if (getArguments() != null) {
             boolean todayEvents = getArguments().getBoolean(TODAY_EVENTS);
             mNoteListPresenter.setTodayEvents(todayEvents);
         }
@@ -126,14 +128,14 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
 
     @Override
     public void updateAdapterElement(int position) {
-        if(mAdapter!=null){
+        if (mAdapter != null) {
             mAdapter.notifyItemChanged(position);
         }
     }
 
     @Override
     public void updateAdapterDataset() {
-        if(mAdapter!=null){
+        if (mAdapter != null) {
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -199,7 +201,7 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
                 @Override
                 public void onClick(View v) {
                     FragmentManager fragmentManager = getFragmentManager();
-                    if(fragmentManager!=null) {
+                    if (fragmentManager != null) {
                         DeleteItemFragment deleteItemFragment = DeleteItemFragment.Companion.newInstance(mNote.getId());
                         deleteItemFragment.setTargetFragment(NoteListFragment.this, DELETE_NOTE);
                         deleteItemFragment.show(fragmentManager, DELETE_ITEM);
@@ -210,8 +212,13 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
 
         @Override
         public void onClick(View v) {
-            Intent intent = NoteActivity.newIntent(getActivity(), mNote.getId());
-            startActivityForResult(intent, UPDATE_NOTE);
+            //Intent intent = NoteActivity.newIntent(getActivity(), mNote.getId());
+            //startActivityForResult(intent, UPDATE_NOTE);
+            //TODO send to activity to open second fragment
+            Activity parentActivity = getActivity();
+            if (parentActivity != null) {
+                parentActivity.setResult(Activity.RESULT_OK, NoteFragment.newIntent(mNote.getId()));
+            }
         }
     }
 

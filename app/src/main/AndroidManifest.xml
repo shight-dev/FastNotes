@@ -12,17 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.NoteListActivity">
+        </activity>
+        <activity
+            android:name=".Activities.NoteActivity"
+            android:label="@string/new_note"
+            android:parentActivityName=".Activities.NoteListActivity" />
+        <activity android:name=".Activities.NoteCombinedActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activities.NoteActivity"
-            android:label="@string/new_note"
-            android:parentActivityName=".Activities.NoteListActivity" />
-
         <service
             android:name=".Services.NoteNotificationService"
             android:exported="false" />
