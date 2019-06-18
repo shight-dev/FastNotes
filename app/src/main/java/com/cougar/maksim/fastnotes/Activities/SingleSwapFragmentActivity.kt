@@ -9,14 +9,19 @@ abstract class SingleSwapFragmentActivity : AppCompatActivity() {
 
     //var mCurrentState: Int = -1
 
+    //создает начальный фрагмент
     protected abstract fun createStartFragment(): Fragment
 
+    //создает второй фрагмент
     protected abstract fun createSecondFragment(data: Any?): Fragment
 
+    //устанавливает начальный фрагмент в контейнер
     protected abstract fun setStartFragment()
 
+    //устанавливает второй фрагмент в контейнер
     protected abstract fun setSecondFragment(data: Any?)
 
+    //создает начальный фрагмент при запуске
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fragment)

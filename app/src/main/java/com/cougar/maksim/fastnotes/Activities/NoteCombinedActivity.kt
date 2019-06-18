@@ -10,8 +10,15 @@ import com.cougar.maksim.fastnotes.Fragments.NoteListFragment
 import com.cougar.maksim.fastnotes.R
 import java.util.*
 
-class NoteCombinedActivity : SingleSwapFragmentActivity(), NoteListFragment.OnNoteListFragmentInteractionListener {
-    override fun onFragmentInteraction(id: UUID?) {
+class NoteCombinedActivity : SingleSwapFragmentActivity(),
+        NoteListFragment.OnNoteListFragmentInteractionListener,
+        NoteFragment.OnNoteFragmentInteractionListener {
+
+    override fun onNoteFragmentInteraction() {
+        setStartFragment()
+    }
+
+    override fun onNoteListFragmentInteraction(id: UUID?) {
         setSecondFragment(id)
     }
 

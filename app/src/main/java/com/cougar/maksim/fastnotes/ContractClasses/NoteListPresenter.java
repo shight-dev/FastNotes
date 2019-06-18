@@ -65,7 +65,7 @@ public class NoteListPresenter implements NoteListContract.Presenter {
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if (requestCode == UPDATE_NOTE) {
+        /*if (requestCode == UPDATE_NOTE) {
             UUID id;
             try {
                 id = (UUID) data.getSerializableExtra("id");
@@ -73,7 +73,7 @@ public class NoteListPresenter implements NoteListContract.Presenter {
                 id = null;
             }
             mInUpdate = id;
-        }
+        }*/
         if (requestCode == DELETE_NOTE) {
             mView.updateUI();
         }
@@ -96,6 +96,7 @@ public class NoteListPresenter implements NoteListContract.Presenter {
 
     @Override
     public void updateDataset(List<Note> notes) {
+        //TODO в текущей реализации проход по if ветке недостижим, переделать или удалить
         if (mInUpdate != null) {
             int position = -1;
 

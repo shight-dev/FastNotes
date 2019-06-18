@@ -1,6 +1,5 @@
 package com.cougar.maksim.fastnotes.Fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.cougar.maksim.fastnotes.R;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.UUID;
 
 public class NoteListFragment extends Fragment implements NoteListContract.View {
@@ -107,8 +105,9 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new_note: {
-                Intent intent = NoteActivity.newItemIntent(getActivity());
-                startActivityForResult(intent, CREATE_NOTE);
+                /*Intent intent = NoteActivity.newItemIntent(getActivity());
+                startActivityForResult(intent, CREATE_NOTE);*/
+                listener.onNoteListFragmentInteraction(null);
                 break;
             }
             case R.id.menu_item_today_events: {
@@ -218,8 +217,9 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
         public void onClick(View v) {
             //Intent intent = NoteActivity.newIntent(getActivity(), mNote.getId());
             //startActivityForResult(intent, UPDATE_NOTE);
+            //TODO подумать над сохранением фрагментов и передачей в них информации об событиях
             if(listener != null) {
-                listener.onFragmentInteraction(mNote.getId());
+                listener.onNoteListFragmentInteraction(mNote.getId());
             }
         }
     }
@@ -257,7 +257,7 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
     }
 
     public interface OnNoteListFragmentInteractionListener {
-        void onFragmentInteraction(UUID id);
+        void onNoteListFragmentInteraction(UUID id);
     }
 
     @Override

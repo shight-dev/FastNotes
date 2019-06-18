@@ -42,7 +42,9 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     public static final int REQUEST_DATE = 0;
     public static final int REQUEST_STATUS = 1;
 
-    public static Intent newIntent(UUID noteId){
+    private OnNoteFragmentInteractionListener listener = null;
+
+    /*public static Intent newIntent(UUID noteId){
         Intent intent = new Intent();
         intent.putExtra(EXTRA_NOTE_ID, noteId);
         return intent;
@@ -52,7 +54,7 @@ public class NoteFragment extends Fragment implements NoteContract.View {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_NEW_ITEM, true);
         return intent;
-    }
+    }*/
 
     public static NoteFragment newInstance(boolean isNewItem) {
         Bundle bundle = new Bundle();
@@ -86,6 +88,7 @@ public class NoteFragment extends Fragment implements NoteContract.View {
         }
     }
 
+    //установка данных в компоненты и установка слушателей
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -169,18 +172,20 @@ public class NoteFragment extends Fragment implements NoteContract.View {
         return v;
     }
 
+    //вызывается дочерними фрагментами
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mNotePresenter.onActivityResult(requestCode, resultCode, data);
     }
 
     public void saveDataAndExit() {
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.putExtra("id", mNotePresenter.getId());
         if (getActivity() != null) {
             getActivity().setResult(Activity.RESULT_OK, intent);
             getActivity().finish();
-        }
+        }*/
+        listener.onNoteFragmentInteraction();
     }
 
     @Override
@@ -201,5 +206,26 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     @Override
     public void updateData(String s) {
         mDataField.setText(s);
+    }
+
+    public interface OnNoteFragmentInteractionListener {
+        void onNoteFragmentInteraction();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof OnNoteFragmentInteractionListener) {
+            listener = (OnNoteFragmentInteractionListener) context;
+        }
+        else {
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 }
