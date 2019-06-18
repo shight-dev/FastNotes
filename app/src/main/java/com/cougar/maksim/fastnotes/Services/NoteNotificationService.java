@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.cougar.maksim.fastnotes.Activities.NoteCombinedActivity;
 import com.cougar.maksim.fastnotes.Activities.NoteListActivity;
 import com.cougar.maksim.fastnotes.DataClasses.Note;
 import com.cougar.maksim.fastnotes.DbWork.NoteLab;
@@ -66,7 +67,8 @@ public class NoteNotificationService extends IntentService {
         NotificationChannel notificationChannel = new NotificationChannel(NOTE_NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);*/
 
         if (listSize > 0) {
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, NoteListActivity.newIntent(this, true), 0);
+            //TODO rework with new arhitecture
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, NoteCombinedActivity.Companion.newIntent(this, true), 0);
             Notification notification;
             if (listSize != 1) {
                 //TODO may produce error with channel id

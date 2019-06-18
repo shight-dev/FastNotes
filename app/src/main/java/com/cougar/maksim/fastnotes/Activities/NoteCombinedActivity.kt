@@ -22,8 +22,6 @@ class NoteCombinedActivity : SingleSwapFragmentActivity(),
         setSecondFragment(id)
     }
 
-    private val TODAY_EVENTS = "today_events"
-
     private val EXTRA_NOTE_ID = "CURRENT_NOTE_ID"
     private val EXTRA_NEW_ITEM = "NEW_ITEM"
 
@@ -64,12 +62,17 @@ class NoteCombinedActivity : SingleSwapFragmentActivity(),
                 .commit()
     }
 
-    fun newIntent(packageContext: Context, todayEvents: Boolean): Intent {
-        val intent = Intent(packageContext, NoteListActivity::class.java)
-        if (todayEvents) {
-            intent.putExtra(TODAY_EVENTS, true)
+    companion object{
+        private val TODAY_EVENTS = "today_events"
+
+        fun newIntent(packageContext: Context, todayEvents: Boolean): Intent {
+            val intent = Intent(packageContext, NoteCombinedActivity::class.java)
+            if (todayEvents) {
+                intent.putExtra(TODAY_EVENTS, true)
+            }
+            return intent
         }
-        return intent
     }
+
 
 }
