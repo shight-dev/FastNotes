@@ -1,18 +1,38 @@
 package com.cougar.maksim.fastnotes.Activities
 
-import android.app.Activity
-import android.content.ActivityNotFoundException
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.cougar.maksim.fastnotes.DbWork.Room.NoteDb
+import com.cougar.maksim.fastnotes.DbWork.Room.NoteEntity
+import com.cougar.maksim.fastnotes.DbWork.Room.NotesDao
 import com.cougar.maksim.fastnotes.Fragments.NoteFragment
 import com.cougar.maksim.fastnotes.Fragments.NoteListFragment
 import com.cougar.maksim.fastnotes.R
+import java.lang.Exception
 import java.util.*
 
 class NoteCombinedActivity : SingleSwapFragmentActivity(),
         NoteListFragment.OnNoteListFragmentInteractionListener,
         NoteFragment.OnNoteFragmentInteractionListener {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        try {
+            val noteDb: NoteDb = Room.databaseBuilder(this, NoteDb::class.java, "noteDb")
+                    .allowMainThreadQueries().build()
+            val noteDao: NotesDao = noteDb.notesDao()
+            val uuid = UUID.randomUUID()
+            noteDao.addNote(NoteEntity(uuid.toString(), "qwe", "asd", 123, "never"))
+            val noteEntity = noteDao.getNote(uuid.toString())
+            val l = 1
+        }
+        catch (e:Exception){
+            val x =1
+        }
+    }
 
     override fun onNoteFragmentInteraction() {
         setStartFragment()
@@ -62,7 +82,7 @@ class NoteCombinedActivity : SingleSwapFragmentActivity(),
                 .commit()
     }
 
-    companion object{
+    companion object {
         private val TODAY_EVENTS = "today_events"
 
         fun newIntent(packageContext: Context, todayEvents: Boolean): Intent {
