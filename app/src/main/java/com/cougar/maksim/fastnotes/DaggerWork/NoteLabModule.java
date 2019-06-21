@@ -12,9 +12,9 @@ import dagger.Provides;
 @Module
 public class NoteLabModule {
 
-    @Provides
+    /*@Provides
     @Singleton
     public NoteLab provideNoteLab(Context context){
         return new NoteLab(context);
-    }
+    }*/
 }

@@ -5,8 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import com.cougar.maksim.fastnotes.DataClasses.Note
+import com.cougar.maksim.fastnotes.DataClasses.NoteStatus
 import com.cougar.maksim.fastnotes.DbWork.Room.NoteDb
-import com.cougar.maksim.fastnotes.DbWork.Room.NoteEntity
 import com.cougar.maksim.fastnotes.DbWork.Room.NotesDao
 import com.cougar.maksim.fastnotes.Fragments.NoteFragment
 import com.cougar.maksim.fastnotes.Fragments.NoteListFragment
@@ -20,18 +21,23 @@ class NoteCombinedActivity : SingleSwapFragmentActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        try {
+        /*try {
             val noteDb: NoteDb = Room.databaseBuilder(this, NoteDb::class.java, "noteDb")
                     .allowMainThreadQueries().build()
             val noteDao: NotesDao = noteDb.notesDao()
             val uuid = UUID.randomUUID()
-            noteDao.addNote(NoteEntity(uuid.toString(), "qwe", "asd", 123, "never"))
-            val noteEntity = noteDao.getNote(uuid.toString())
+            val note = Note(uuid)
+            note.data = "qwe"
+            note.date = Date()
+            note.status = NoteStatus.ALL_BEFORE_DATE
+            note.title = "i'm awesome"
+            noteDao.addNote(note)
+            val noteReloaded = noteDao.getNote(uuid)
             val l = 1
         }
         catch (e:Exception){
             val x =1
-        }
+        }*/
     }
 
     override fun onNoteFragmentInteraction() {

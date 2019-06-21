@@ -1,5 +1,6 @@
 package com.cougar.maksim.fastnotes.DbWork;
 
+import android.arch.persistence.room.Room;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.cougar.maksim.fastnotes.DataClasses.Note;
 import com.cougar.maksim.fastnotes.DataClasses.NoteStatus;
+import com.cougar.maksim.fastnotes.DbWork.Room.NoteDb;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +19,8 @@ import java.util.UUID;
 
 public class NoteLab {
     private static NoteLab sNoteLab;
-    private SQLiteDatabase mDatabase;
+    //private SQLiteDatabase mDatabase;
+    private NoteDb noteDb;
 
     public static NoteLab get(Context context) {
         if (sNoteLab == null) {
@@ -26,35 +29,40 @@ public class NoteLab {
         return sNoteLab;
     }
 
-    public NoteLab(Context context) {
-        mDatabase = new NoteDBHelper(context)
-                .getWritableDatabase();
+    private NoteLab(Context context) {
+        /*mDatabase = new NoteDBHelper(context)
+                .getWritableDatabase();*/
+        noteDb = Room.databaseBuilder(context, NoteDb.class, "noteDb")
+                .allowMainThreadQueries()
+                .build();
     }
 
     public void addNote(Note note) {
-        ContentValues values=getContentValues(note);
+        //ContentValues values=getContentValues(note);
 
-        mDatabase.insert(NoteTable.NAME,null,values);
+        //mDatabase.insert(NoteTable.NAME,null,values);
+        noteDb.notesDao().addNote(note);
     }
 
     public void updateNote(Note note){
-        String uuidString = note.getId().toString();
+        /*String uuidString = note.getId().toString();
         ContentValues values=getContentValues(note);
 
         mDatabase.update(NoteTable.NAME,values,
                 NoteTable.NoteFields.UUID + " = ?",
-                new String[] { uuidString });
+                new String[] { uuidString });*/
+        noteDb.notesDao().updateNote(note);
     }
 
     public List<Note> getNotes() {
-        ArrayList<Note> noteList = new ArrayList<>();
+        /*ArrayList<Note> noteList = new ArrayList<>();
 
-        /*for (int i=0;i<100;++i) {
+        for (int i=0;i<100;++i) {
             Note note = new Note();
             note.setTitle("Test #"+i);
             note.setData("Data "+i);
             addNote(note);
-        }*/
+        }
 
         try (NoteCursorWrapper cursor = queryNotes(null, null)) {
             cursor.moveToFirst();
@@ -64,11 +72,12 @@ public class NoteLab {
             }
         }
 
-        return noteList;
+        return noteList;*/
+        return noteDb.notesDao().getNotes();
     }
 
     public List<Note> getTodayNotes(){
-        ArrayList<Note> noteList = new ArrayList<>();
+        /*ArrayList<Note> noteList = new ArrayList<>();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 
@@ -93,12 +102,26 @@ public class NoteLab {
                 cursor.moveToNext();
             }
         }
-        return noteList;
+        return noteList;*/
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+        Date date= new Date();
+        try {
+            date = simpleDateFormat.parse(simpleDateFormat.format(date));
+        }
+        catch (Exception e){
+            //use wrong date
+            //TODO rework with JodaTime or something else
+        }
+        long dateTime = date.getTime();
+        String dateStrVal = String.valueOf(dateTime);
+
+        return noteDb.notesDao().getTodayNotes(dateStrVal,
+                NoteStatus.AT_DAY.toString(),NoteStatus.ALWAYS.toString(), NoteStatus.ALL_BEFORE_DATE.toString());
     }
 
     public Note getNote(UUID id) {
 
-        try (NoteCursorWrapper cursor = queryNotes(
+        /*try (NoteCursorWrapper cursor = queryNotes(
                 NoteTable.NoteFields.UUID + "= ?",
                 new String[]{id.toString()}
         )) {
@@ -108,11 +131,14 @@ public class NoteLab {
 
             cursor.moveToFirst();
             return cursor.getNote();
-        }
+        }*/
+        return noteDb.notesDao().getNote(id);
     }
 
     public void deleteNote(UUID id){
-        deleteNotes(NoteTable.NoteFields.UUID + " = ?",new String[] {id.toString()});
+        //deleteNotes(NoteTable.NoteFields.UUID + " = ?",new String[] {id.toString()});
+        Note note = noteDb.notesDao().getNote(id);
+        noteDb.notesDao().deleteNote(note);
     }
 
     private static ContentValues getContentValues(Note note) {
@@ -140,7 +166,7 @@ public class NoteLab {
         return values;
     }
 
-    private NoteCursorWrapper queryNotes(String whereClause, String[] whereArgs){
+    /*private NoteCursorWrapper queryNotes(String whereClause, String[] whereArgs){
         Cursor cursor=mDatabase.query(
                 NoteTable.NAME,
                 null,   //all fields
@@ -160,5 +186,5 @@ public class NoteLab {
                 whereClause,
                 whereArgs
         );
-    }
+    }*/
 }
