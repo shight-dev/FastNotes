@@ -105,8 +105,6 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new_note: {
-                /*Intent intent = NoteActivity.newItemIntent(getActivity());
-                startActivityForResult(intent, CREATE_NOTE);*/
                 listener.onNoteListFragmentInteraction(null);
                 break;
             }
@@ -215,8 +213,6 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
 
         @Override
         public void onClick(View v) {
-            //Intent intent = NoteActivity.newIntent(getActivity(), mNote.getId());
-            //startActivityForResult(intent, UPDATE_NOTE);
             //TODO подумать над сохранением фрагментов и передачей в них информации об событиях
             if(listener != null) {
                 listener.onNoteListFragmentInteraction(mNote.getId());

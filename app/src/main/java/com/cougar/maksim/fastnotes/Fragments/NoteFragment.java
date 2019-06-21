@@ -1,6 +1,5 @@
 package com.cougar.maksim.fastnotes.Fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,9 +21,6 @@ import com.cougar.maksim.fastnotes.R;
 
 import java.util.UUID;
 
-import static com.cougar.maksim.fastnotes.Activities.NoteActivity.EXTRA_NEW_ITEM;
-import static com.cougar.maksim.fastnotes.Activities.NoteActivity.EXTRA_NOTE_ID;
-
 public class NoteFragment extends Fragment implements NoteContract.View {
 
     private EditText mTitleField;
@@ -43,18 +39,6 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     public static final int REQUEST_STATUS = 1;
 
     private OnNoteFragmentInteractionListener listener = null;
-
-    /*public static Intent newIntent(UUID noteId){
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_NOTE_ID, noteId);
-        return intent;
-    }
-
-    public static Intent newItemIntent(){
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_NEW_ITEM, true);
-        return intent;
-    }*/
 
     public static NoteFragment newInstance(boolean isNewItem) {
         Bundle bundle = new Bundle();
@@ -179,12 +163,6 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     }
 
     public void saveDataAndExit() {
-        /*Intent intent = new Intent();
-        intent.putExtra("id", mNotePresenter.getId());
-        if (getActivity() != null) {
-            getActivity().setResult(Activity.RESULT_OK, intent);
-            getActivity().finish();
-        }*/
         listener.onNoteFragmentInteraction();
     }
 
