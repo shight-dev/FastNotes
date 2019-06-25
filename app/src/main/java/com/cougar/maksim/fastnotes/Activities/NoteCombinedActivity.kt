@@ -14,6 +14,9 @@ class NoteCombinedActivity : SingleSwapFragmentActivity(),
 
     override fun onNoteFragmentInteraction() {
         setStartFragment()
+        if (landscape) {
+            removeFragmentFromContainer(NoteFragment::class.java)
+        }
     }
 
     override fun onNoteListFragmentInteraction(id: UUID?) {
@@ -44,17 +47,43 @@ class NoteCombinedActivity : SingleSwapFragmentActivity(),
     }
 
     override fun setStartFragment() {
-        val fm = supportFragmentManager
-        fm.beginTransaction()
-                .replace(R.id.fragment_container, createStartFragment())
-                .commit()
+        if (!landscape) {
+            setStartFragmentToContainer(R.id.fragment_container)
+        } else {
+            setStartFragmentToContainer(R.id.main_fragment_container)
+        }
     }
 
     override fun setSecondFragment(data: Any?) {
+        if (!landscape) {
+            setSecondFragmentToContainer(data, R.id.fragment_container)
+        } else {
+            setSecondFragmentToContainer(data, R.id.second_fragment_container)
+        }
+    }
+
+    private fun setStartFragmentToContainer(containerId: Int) {
         val fm = supportFragmentManager
         fm.beginTransaction()
-                .replace(R.id.fragment_container, createSecondFragment(data))
+                .replace(containerId, createStartFragment())
                 .commit()
+    }
+
+    private fun setSecondFragmentToContainer(data: Any?, containerId: Int) {
+        val fm = supportFragmentManager
+        fm.beginTransaction()
+                .replace(containerId, createSecondFragment(data))
+                .commit()
+    }
+
+    private fun removeFragmentFromContainer(fragmentClass: Class<out Fragment>) {
+        val fm = supportFragmentManager
+        val list = fm.fragments.filterIsInstance(fragmentClass)
+        list.forEach {
+            fm.beginTransaction()
+                    .remove(it)
+                    .commit()
+        }
     }
 
     companion object {
