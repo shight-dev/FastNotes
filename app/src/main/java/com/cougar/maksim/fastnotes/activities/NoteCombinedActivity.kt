@@ -12,6 +12,8 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         NoteListFragment.OnNoteListFragmentInteractionListener,
         NoteFragment.OnNoteFragmentInteractionListener {
 
+    //TODO поворот экрана при открытой заметке возвращает начальное состояние активити
+
     //событие слушателя
     override fun onNoteFragmentInteraction() {
         setStartFragment()
