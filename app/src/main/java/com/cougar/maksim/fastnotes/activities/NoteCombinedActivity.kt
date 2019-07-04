@@ -13,6 +13,7 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         NoteFragment.OnNoteFragmentInteractionListener {
 
     //TODO поворот экрана при открытой заметке возвращает начальное состояние активити
+    //TODO не пересоздавать фрагменты
 
     //событие слушателя
     override fun onNoteFragmentInteraction() {

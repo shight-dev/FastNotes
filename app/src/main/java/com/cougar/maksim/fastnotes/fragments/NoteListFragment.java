@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,17 +17,19 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.cougar.maksim.fastnotes.contractClasses.NoteListContract;
-import com.cougar.maksim.fastnotes.contractClasses.NoteListPresenter;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.cougar.maksim.fastnotes.presenters.NoteListPresenter;
 import com.cougar.maksim.fastnotes.dataClasses.Note;
 import com.cougar.maksim.fastnotes.R;
+import com.cougar.maksim.fastnotes.mvpMoxyViews.NoteListView;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-public class NoteListFragment extends Fragment implements NoteListContract.View {
+public class NoteListFragment extends MvpAppCompatFragment implements NoteListView {
 
     /*@Inject
     NoteLab noteLab;*/
@@ -44,7 +45,8 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
     public static final String TODAY_EVENTS = "today_events";
     public static final String DELETE_ITEM = "delete_item";
 
-    private NoteListPresenter mNoteListPresenter;
+    @InjectPresenter
+    public NoteListPresenter mNoteListPresenter;
 
     private OnNoteListFragmentInteractionListener listener = null;
 
@@ -60,7 +62,6 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNoteListPresenter = new NoteListPresenter(this);
         //App.getComponent().inject((NoteListActivity) getActivity());
         setHasOptionsMenu(true);
         if (savedInstanceState != null) {
@@ -141,6 +142,7 @@ public class NoteListFragment extends Fragment implements NoteListContract.View 
     }
 
     public void updateUI() {
+        //TODO move to presenter
         List<Note> notes = mNoteListPresenter.getNotes();
 
         if (mAdapter == null) {

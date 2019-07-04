@@ -1,10 +1,14 @@
-package com.cougar.maksim.fastnotes.contractClasses;
+package com.cougar.maksim.fastnotes.presenters;
 
 import android.app.Activity;
 import android.content.Intent;
 
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
+import com.cougar.maksim.fastnotes.daggerWork.App;
 import com.cougar.maksim.fastnotes.dataClasses.Note;
 import com.cougar.maksim.fastnotes.dbWork.NoteLab;
+import com.cougar.maksim.fastnotes.mvpMoxyViews.NoteListView;
 import com.cougar.maksim.fastnotes.services.NoteNotificationService;
 
 import java.util.List;
@@ -13,57 +17,52 @@ import java.util.UUID;
 //TODO fix dependency
 import static com.cougar.maksim.fastnotes.fragments.NoteListFragment.DELETE_NOTE;
 
-public class NoteListPresenter implements NoteListContract.Presenter {
-
-    private NoteListContract.View mView;
+@InjectViewState
+public class NoteListPresenter extends MvpPresenter<NoteListView> {
 
     private boolean mTodayEvents;
     private UUID mInUpdate;
 
 
-    public NoteListPresenter(NoteListContract.View mView) {
-        this.mView = mView;
+    public NoteListPresenter() {
+        //this.mView = mView;
         mTodayEvents = false;
         mInUpdate = null;
     }
 
-    @Override
     public void setTodayEvents(boolean todayEvents) {
         mTodayEvents = todayEvents;
     }
 
-    @Override
     public void changeTodayEvents() {
         if (mTodayEvents) {
             mTodayEvents = false;
-            mView.setMenuItemSearch();
+            getViewState().setMenuItemSearch();
         } else {
             mTodayEvents = true;
-            mView.setMenuItemDelete();
+            getViewState().setMenuItemDelete();
         }
     }
 
-    @Override
     public void updateMenu() {
         if (mTodayEvents) {
-            mView.setMenuItemDelete();
+            getViewState().setMenuItemDelete();
         } else {
-            mView.setMenuItemSearch();
+            getViewState().setMenuItemSearch();
         }
     }
 
-    @Override
     public void onResume() {
-        mView.updateUI();
+        getViewState().updateUI();
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //set null in some case lifecycle errors
         mInUpdate = null;
         if (resultCode != Activity.RESULT_OK) {
             return;
         }
+        //TODO обновлять конкретный элемент
         /*if (requestCode == UPDATE_NOTE) {
             UUID id;
             try {
@@ -74,32 +73,30 @@ public class NoteListPresenter implements NoteListContract.Presenter {
             mInUpdate = id;
         }*/
         if (requestCode == DELETE_NOTE) {
-            mView.updateUI();
+            getViewState().updateUI();
         }
     }
 
-    @Override
     public void startNotifications() {
-        NoteNotificationService.setServiceAlarm(mView.getActivity(), true);
+        NoteNotificationService.setServiceAlarm(App.getAppContext(), true);
     }
 
-    @Override
     public List<Note> getNotes() {
         if(!mTodayEvents) {
-            return NoteLab.get(mView.getActivity()).getNotes();
+            return NoteLab.get(App.getAppContext()).getNotes();
         }
         else {
-            return NoteLab.get(mView.getActivity()).getTodayNotes();
+            return NoteLab.get(App.getAppContext()).getTodayNotes();
         }
     }
 
-    @Override
     public void updateDataset(List<Note> notes) {
         //TODO в текущей реализации проход по if ветке недостижим, переделать или удалить
         if (mInUpdate != null) {
             int position = -1;
 
             //TODO optimise search
+            //TODO DiffUtil
             for (int i = 0; i < notes.size(); ++i) {
                 if (notes.get(i).getId().equals(mInUpdate)) {
                     position = i;
@@ -107,13 +104,12 @@ public class NoteListPresenter implements NoteListContract.Presenter {
                 }
             }
             mInUpdate = null;
-            mView.updateAdapterElement(position);
+            getViewState().updateAdapterElement(position);
         } else {
-            mView.updateAdapterDataset();
+            getViewState().updateAdapterDataset();
         }
     }
 
-    @Override
     public boolean getTodayEvents() {
         return mTodayEvents;
     }

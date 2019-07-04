@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,13 +14,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.cougar.maksim.fastnotes.contractClasses.NoteContract;
-import com.cougar.maksim.fastnotes.contractClasses.NotePresenter;
+import com.arellomobile.mvp.MvpAppCompatFragment;
+import com.arellomobile.mvp.presenter.InjectPresenter;
+//TODO вынести интерфейсы в контракт
+import com.cougar.maksim.fastnotes.presenters.NotePresenter;
 import com.cougar.maksim.fastnotes.R;
+import com.cougar.maksim.fastnotes.mvpMoxyViews.NoteView;
 
 import java.util.UUID;
 
-public class NoteFragment extends Fragment implements NoteContract.View {
+public class NoteFragment extends MvpAppCompatFragment implements NoteView {
 
     private EditText mTitleField;
     private EditText mDataField;
@@ -29,7 +31,9 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     private Button mPickDateBtn;
     private Button mSetStatusBtn;
 
-    private NotePresenter mNotePresenter;
+    //TODO не происходит inject
+    @InjectPresenter
+    public NotePresenter mNotePresenter;
 
     private static final String NEW_ITEM = "NEW_ITEM";
     private static final String NOTE_ID = "NOTE_ID";
@@ -61,7 +65,6 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mNotePresenter = new NotePresenter(this);
         if (getArguments() != null) {
             boolean isNewItem = getArguments().getBoolean(NEW_ITEM);
             UUID noteId = (UUID) getArguments().getSerializable(NOTE_ID);
@@ -167,22 +170,22 @@ public class NoteFragment extends Fragment implements NoteContract.View {
     }
 
     @Override
-    public void updateDateBtn(String s) {
+    public void updateDateBtn(@NonNull String s) {
         mPickDateBtn.setText(s);
     }
 
     @Override
-    public void updateStatusBtn(String s) {
+    public void updateStatusBtn(@NonNull String s) {
         mSetStatusBtn.setText(s);
     }
 
     @Override
-    public void updateTitle(String s) {
+    public void updateTitle(@NonNull String s) {
         mTitleField.setText(s);
     }
 
     @Override
-    public void updateData(String s) {
+    public void updateData(@NonNull String s) {
         mDataField.setText(s);
     }
 

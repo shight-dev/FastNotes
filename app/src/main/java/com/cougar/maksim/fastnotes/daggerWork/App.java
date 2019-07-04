@@ -1,8 +1,11 @@
 package com.cougar.maksim.fastnotes.daggerWork;
 
 import android.app.Application;
+import android.content.Context;
 
 public class App extends Application {
+
+    private static Context context;
 
     private static AppComponent component;
 
@@ -16,4 +19,15 @@ public class App extends Application {
                 .noteLabModule(new NoteLabModule())
                 .build();
     }*/
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = getApplicationContext();
+    }
+
+    //возвращает глобальный контекст
+    public static Context getAppContext(){
+        return context;
+    }
 }

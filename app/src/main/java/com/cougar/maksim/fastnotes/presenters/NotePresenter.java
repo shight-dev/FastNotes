@@ -1,14 +1,18 @@
-package com.cougar.maksim.fastnotes.contractClasses;
+package com.cougar.maksim.fastnotes.presenters;
 
 import android.app.Activity;
 import android.content.Intent;
 
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
+import com.cougar.maksim.fastnotes.daggerWork.App;
 import com.cougar.maksim.fastnotes.dataClasses.Note;
 import com.cougar.maksim.fastnotes.dataClasses.NoteStatus;
 import com.cougar.maksim.fastnotes.dbWork.NoteLab;
 import com.cougar.maksim.fastnotes.fragments.DatePickerFragment;
 import com.cougar.maksim.fastnotes.fragments.StatusFragment;
 import com.cougar.maksim.fastnotes.R;
+import com.cougar.maksim.fastnotes.mvpMoxyViews.NoteView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,23 +23,23 @@ import java.util.UUID;
 import static com.cougar.maksim.fastnotes.fragments.NoteFragment.REQUEST_DATE;
 import static com.cougar.maksim.fastnotes.fragments.NoteFragment.REQUEST_STATUS;
 
-public class NotePresenter implements NoteContract.Presenter {
+@InjectViewState
+public class NotePresenter extends MvpPresenter<NoteView> {
 
-    private NoteContract.View mView;
+    //private NoteContract.View mView;
     private Note mNote;
     private boolean mIsNewItem;
 
-    public NotePresenter(NoteContract.View mView) {
-        this.mView = mView;
+    public NotePresenter() {
+        //this.mView = mView;
     }
 
-    @Override
     public void setData(boolean isNewItem, UUID id) {
         this.mIsNewItem = isNewItem;
 
         if (!isNewItem) {
             if(id!=null) {
-                mNote = NoteLab.get(mView.getActivity()).getNote(id);
+                mNote = NoteLab.get(App.getAppContext()).getNote(id);
             }
             else {
                 throw new RuntimeException("No id arg exception");
@@ -49,32 +53,27 @@ public class NotePresenter implements NoteContract.Presenter {
         }
     }
 
-    @Override
     public void setNoteDate(Date date) {
         mNote.setDate(date);
 
     }
 
-    @Override
     public void setNoteTitle(String s) {
         mNote.setTitle(s);
     }
 
-    @Override
     public void setNoteContent(String s) {
         mNote.setData(s);
     }
 
-    @Override
     public void updateNote() {
         if (!mIsNewItem) {
-            NoteLab.get(mView.getActivity()).updateNote(mNote);
+            NoteLab.get(App.getAppContext()).updateNote(mNote);
         } else {
-            NoteLab.get(mView.getActivity()).addNote(mNote);
+            NoteLab.get(App.getAppContext()).addNote(mNote);
         }
     }
 
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(resultCode !=Activity.RESULT_OK){
             return;
@@ -98,46 +97,40 @@ public class NotePresenter implements NoteContract.Presenter {
         mNote.setStatus(status);
     }
 
-    @Override
     public void updateTitleView() {
-        mView.updateTitle(mNote.getTitle());
+        getViewState().updateTitle(mNote.getTitle());
     }
 
-    @Override
     public void updateDateView() {
         Date date = mNote.getDate();
         if(date!=null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-            mView.updateDateBtn(dateFormat.format(mNote.getDate()));
+            getViewState().updateDateBtn(dateFormat.format(mNote.getDate()));
         }
         else {
-            mView.updateDateBtn(mView.getActivity().getString(R.string.set_date));
+            getViewState().updateDateBtn(App.getAppContext().getString(R.string.set_date));
         }
     }
 
-    @Override
     public void updateDataView() {
-        mView.updateData(mNote.getData());
+        getViewState().updateData(mNote.getData());
     }
 
-    @Override
     public void updateStatusView() {
         NoteStatus noteStatus = mNote.getStatus();
         if(noteStatus != null){
-            mView.updateStatusBtn(noteStatus.getStringVal());
+            getViewState().updateStatusBtn(noteStatus.getStringVal());
         }
         else {
             //TODO set default status
-            mView.updateStatusBtn(NoteStatus.ALWAYS.getStringVal());
+            getViewState().updateStatusBtn(NoteStatus.ALWAYS.getStringVal());
         }
     }
 
-    @Override
     public Date getDate() {
         return mNote.getDate();
     }
 
-    @Override
     public UUID getId() {
         return mNote.getId();
     }
