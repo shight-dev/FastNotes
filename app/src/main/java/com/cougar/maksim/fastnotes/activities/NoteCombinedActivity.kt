@@ -3,29 +3,38 @@ package com.cougar.maksim.fastnotes.activities
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.Fragment
+import com.arellomobile.mvp.presenter.InjectPresenter
 import com.cougar.maksim.fastnotes.fragments.NoteFragment
 import com.cougar.maksim.fastnotes.fragments.NoteListFragment
 import com.cougar.maksim.fastnotes.R
+import com.cougar.maksim.fastnotes.mvpMoxyViews.CombinedView
+import com.cougar.maksim.fastnotes.presenters.CombinedPresenter
 import java.util.*
 
 class NoteCombinedActivity : DoubleSwapFragmentActivity(),
+        CombinedView,
         NoteListFragment.OnNoteListFragmentInteractionListener,
         NoteFragment.OnNoteFragmentInteractionListener {
 
     //TODO поворот экрана при открытой заметке возвращает начальное состояние активити
     //TODO не пересоздавать фрагменты
 
+    @InjectPresenter
+    lateinit var  combinedPresenter: CombinedPresenter
+
     //событие слушателя
     override fun onNoteFragmentInteraction() {
-        setStartFragment()
+        combinedPresenter.onNoteFragmentInteraction()
+        /*setStartFragment()
         if (landscape) {
             removeFragmentFromContainer(NoteFragment::class.java)
-        }
+        }*/
     }
 
     //событие слушателя
     override fun onNoteListFragmentInteraction(id: UUID?) {
-        setSecondFragment(id)
+        combinedPresenter.onNoteListFragmentInteraction(id)
+        //setSecondFragment(id)
     }
 
     //создает стартовый фрагмент
@@ -59,6 +68,7 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
             setStartFragmentToContainer(R.id.single_fragment_container)
         } else {
             setStartFragmentToContainer(R.id.main_fragment_container)
+            removeFragmentFromContainer(NoteFragment::class.java)
         }
     }
 

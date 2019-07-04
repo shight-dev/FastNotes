@@ -92,13 +92,15 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.note_list_menu, menu);
-        mMenu = menu;
+        //TODO проблемы с сохранением состояния меню
+        //mMenu = menu;
     }
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        mNoteListPresenter.updateMenu();
+        mMenu = menu;
+        //mNoteListPresenter.updateMenu();
     }
 
     @Override
@@ -119,12 +121,18 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
 
     @Override
     public void setMenuItemDelete() {
-        mMenu.findItem(R.id.menu_item_today_events).setIcon(android.R.drawable.ic_delete);
+        if (mMenu != null) {
+            mMenu.findItem(R.id.menu_item_today_events).setIcon(android.R.drawable.ic_delete);
+        }
     }
 
     @Override
     public void setMenuItemSearch() {
-        mMenu.findItem(R.id.menu_item_today_events).setIcon(android.R.drawable.ic_menu_search);
+        //TODO выплняется два раза при запуске фрагмента
+        //TODO возможно moxy выполняет команду при пересоздании фрагмента перед сохранением меню в поле класса
+        if (mMenu != null) {
+            mMenu.findItem(R.id.menu_item_today_events).setIcon(android.R.drawable.ic_menu_search);
+        }
     }
 
     @Override
@@ -215,7 +223,7 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
         @Override
         public void onClick(View v) {
             //TODO подумать над сохранением фрагментов и передачей в них информации об событиях
-            if(listener != null) {
+            if (listener != null) {
                 listener.onNoteListFragmentInteraction(mNote.getId());
             }
         }
@@ -260,10 +268,9 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof OnNoteListFragmentInteractionListener) {
+        if (context instanceof OnNoteListFragmentInteractionListener) {
             listener = (OnNoteListFragmentInteractionListener) context;
-        }
-        else {
+        } else {
             throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }

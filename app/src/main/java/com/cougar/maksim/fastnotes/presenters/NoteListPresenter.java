@@ -44,6 +44,7 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
         }
     }
 
+    //TODO move to view
     public void updateMenu() {
         if (mTodayEvents) {
             getViewState().setMenuItemDelete();
