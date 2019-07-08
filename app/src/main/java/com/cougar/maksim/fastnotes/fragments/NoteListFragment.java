@@ -63,7 +63,7 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //App.getComponent().inject((NoteListActivity) getActivity());
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
         if (savedInstanceState != null) {
             boolean todayEvents = savedInstanceState.getBoolean(TODAY_EVENTS, false);
             mNoteListPresenter.setTodayEvents(todayEvents);

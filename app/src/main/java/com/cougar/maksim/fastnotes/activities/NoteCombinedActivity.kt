@@ -2,8 +2,14 @@ package com.cougar.maksim.fastnotes.activities
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.v4.app.Fragment
+import android.view.Menu
+import android.view.MenuItem
 import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
+import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 import com.cougar.maksim.fastnotes.fragments.NoteFragment
 import com.cougar.maksim.fastnotes.fragments.NoteListFragment
 import com.cougar.maksim.fastnotes.R
@@ -20,7 +26,9 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     //TODO не пересоздавать фрагменты
 
     @InjectPresenter
-    lateinit var  combinedPresenter: CombinedPresenter
+    lateinit var combinedPresenter: CombinedPresenter
+
+    private var mMenu: Menu? = null
 
     //событие слушателя
     override fun onNoteFragmentInteraction() {
@@ -38,8 +46,8 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     }
 
     //создает стартовый фрагмент
-    override fun createStartFragment(): Fragment {
-        return if (!intent.getBooleanExtra(TODAY_EVENTS, false)) {
+    override fun createStartFragment(todayEvents: Boolean): Fragment {
+        return if (!(intent.getBooleanExtra(TODAY_EVENTS, false) || todayEvents)) {
             NoteListFragment.newInstance(false)
         } else {
             NoteListFragment.newInstance(true)
@@ -63,11 +71,11 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     }
 
     //устанавливает стартовый фрагмент в контейнер в зависимости от ориентации
-    override fun setStartFragment() {
+    override fun setStartFragment(todayEvents: Boolean) {
         if (!landscape) {
-            setStartFragmentToContainer(R.id.single_fragment_container)
+            setStartFragmentToContainer(R.id.single_fragment_container, todayEvents)
         } else {
-            setStartFragmentToContainer(R.id.main_fragment_container)
+            setStartFragmentToContainer(R.id.main_fragment_container, todayEvents)
             removeFragmentFromContainer(NoteFragment::class.java)
         }
     }
@@ -82,10 +90,10 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     }
 
     //устанавливает стартовый фрагмент в определенный контейнер
-    private fun setStartFragmentToContainer(containerId: Int) {
+    private fun setStartFragmentToContainer(containerId: Int, todayEvents: Boolean = false) {
         val fm = supportFragmentManager
         fm.beginTransaction()
-                .replace(containerId, createStartFragment())
+                .replace(containerId, createStartFragment(todayEvents))
                 .commit()
     }
 
@@ -121,5 +129,45 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        //super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.note_list_menu, menu)
+        mMenu = menu
+        return true
+    }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        super.onPrepareOptionsMenu(menu)
+        combinedPresenter.onRestoreInstance()
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.menu_item_new_note -> {
+                onNoteListFragmentInteraction(null)
+            }
+            R.id.menu_item_today_events -> {
+                combinedPresenter.todayEventClick()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    //TODO стратегия не работает
+    @StateStrategyType(SkipStrategy::class)
+    override fun updateMenu(todayEvents: Boolean) {
+        //TODO вероятно проблема с очередью команд в viewState
+        if (todayEvents) {
+            mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_delete)
+        } else {
+            mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_menu_search)
+        }
+        setStartFragment(todayEvents)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        //combinedPresenter.onRestoreInstance()
+    }
 }

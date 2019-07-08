@@ -7,10 +7,23 @@ import java.util.*
 
 @InjectViewState
 class CombinedPresenter : MvpPresenter<CombinedView>() {
-    fun onNoteFragmentInteraction(){
-        viewState.setStartFragment()
+
+    var mTodayEvents: Boolean = false
+
+    fun onNoteFragmentInteraction() {
+        viewState.setStartFragment(mTodayEvents)
     }
-    fun onNoteListFragmentInteraction(id: UUID?){
+
+    fun onNoteListFragmentInteraction(id: UUID?) {
         viewState.setSecondFragment(id)
+    }
+
+    fun todayEventClick() {
+        mTodayEvents = !mTodayEvents
+        viewState.updateMenu(mTodayEvents)
+    }
+
+    fun onRestoreInstance(){
+        viewState.updateMenu(mTodayEvents)
     }
 }

@@ -12,13 +12,13 @@ abstract class DoubleSwapFragmentActivity : MvpAppCompatActivity() {
     var landscape: Boolean = false
 
     //создает начальный фрагмент
-    protected abstract fun createStartFragment(): Fragment
+    protected abstract fun createStartFragment(todayEvents :Boolean = false): Fragment
 
     //создает второй фрагмент
     protected abstract fun createSecondFragment(data: Any?): Fragment
 
     //устанавливает начальный фрагмент в контейнер
-    protected abstract fun setStartFragment()
+    protected abstract fun setStartFragment(todayEvents: Boolean = false)
 
     //устанавливает второй фрагмент в контейнер
     protected abstract fun setSecondFragment(data: Any?)
