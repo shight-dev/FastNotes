@@ -146,11 +146,8 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-
-    //TODO стратегия не работает
-    @StateStrategyType(SkipStrategy::class)
+    
     override fun updateMenu(todayEvents: Boolean) {
-        //TODO вероятно проблема с очередью команд в viewState
         if (todayEvents) {
             mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_delete)
         } else {
