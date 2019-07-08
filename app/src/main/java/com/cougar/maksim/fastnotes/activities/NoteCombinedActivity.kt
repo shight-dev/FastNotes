@@ -2,8 +2,6 @@ package com.cougar.maksim.fastnotes.activities
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v4.app.Fragment
 import android.view.Menu
 import android.view.MenuItem
@@ -33,16 +31,11 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     //событие слушателя
     override fun onNoteFragmentInteraction() {
         combinedPresenter.onNoteFragmentInteraction()
-        /*setStartFragment()
-        if (landscape) {
-            removeFragmentFromContainer(NoteFragment::class.java)
-        }*/
     }
 
     //событие слушателя
     override fun onNoteListFragmentInteraction(id: UUID?) {
         combinedPresenter.onNoteListFragmentInteraction(id)
-        //setSecondFragment(id)
     }
 
     //создает стартовый фрагмент
@@ -164,10 +157,5 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
             mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_menu_search)
         }
         setStartFragment(todayEvents)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-        //combinedPresenter.onRestoreInstance()
     }
 }
