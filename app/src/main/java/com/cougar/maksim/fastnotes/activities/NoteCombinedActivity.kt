@@ -131,6 +131,7 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         super.onPrepareOptionsMenu(menu)
+        //TODO возможно можно уйти от вызова с помощью стратегии moxy
         combinedPresenter.onRestoreInstance()
         return true
     }
@@ -146,7 +147,7 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         }
         return super.onOptionsItemSelected(item)
     }
-    
+
     override fun updateMenu(todayEvents: Boolean) {
         if (todayEvents) {
             mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_delete)
