@@ -65,6 +65,7 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
 
     //устанавливает стартовый фрагмент в контейнер в зависимости от ориентации
     override fun setStartFragment(todayEvents: Boolean) {
+        setMenuItemsVisibility(true)
         if (!landscape) {
             setStartFragmentToContainer(R.id.single_fragment_container, todayEvents)
         } else {
@@ -76,6 +77,8 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     //устанавливает второй фрагмент в контейнер в зависимости от ориентации
     override fun setSecondFragment(data: Any?) {
         if (!landscape) {
+            //скрывает меню при открытии второго фрагмента
+            setMenuItemsVisibility(false)
             setSecondFragmentToContainer(data, R.id.single_fragment_container)
         } else {
             setSecondFragmentToContainer(data, R.id.second_fragment_container)
@@ -132,6 +135,7 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         super.onPrepareOptionsMenu(menu)
         //TODO возможно можно уйти от вызова с помощью стратегии moxy
+        //или нельзя, так как методы вызываются до создания меню
         combinedPresenter.onRestoreInstance()
         return true
     }
@@ -155,5 +159,10 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
             mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_menu_search)
         }
         setStartFragment(todayEvents)
+    }
+
+    private fun setMenuItemsVisibility(visible:Boolean){
+        mMenu?.findItem(R.id.menu_item_today_events)?.isVisible = visible
+        mMenu?.findItem(R.id.menu_item_new_note)?.isVisible = visible
     }
 }
