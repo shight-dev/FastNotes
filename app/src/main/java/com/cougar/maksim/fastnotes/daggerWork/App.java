@@ -5,6 +5,7 @@ import android.content.Context;
 
 public class App extends Application {
 
+
     private static Context context;
 
     private static AppComponent component;
@@ -13,21 +14,21 @@ public class App extends Application {
         return component;
     }
 
-    /*protected AppComponent builderComponent() {
-        //TODO add dependency daggerpocesssor or something else
+    protected AppComponent buildComponent() {
         return DaggerAppComponent.builder()
+                .contextModule(new ContextModule(getApplicationContext()))
                 .noteLabModule(new NoteLabModule())
                 .build();
-    }*/
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        component = buildComponent();
         context = getApplicationContext();
     }
 
-    //возвращает глобальный контекст
-    public static Context getAppContext(){
+    public static Context getAppContext() {
         return context;
     }
 }
