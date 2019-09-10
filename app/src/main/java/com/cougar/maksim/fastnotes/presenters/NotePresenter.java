@@ -39,6 +39,7 @@ public class NotePresenter extends MvpPresenter<NoteView> {
 
         if (!isNewItem) {
             if(id!=null) {
+                //TODO inject
                 mNote = NoteLab.get(App.getAppContext()).getNote(id);
             }
             else {
@@ -50,6 +51,8 @@ public class NotePresenter extends MvpPresenter<NoteView> {
             mNote.setDate(new Date());
             //TODO add menu to choose default value
             mNote.setStatus(NoteStatus.NEVER);
+            //TODO add menu to choose default value
+            mNote.setNotify(false);
         }
     }
 
@@ -125,6 +128,14 @@ public class NotePresenter extends MvpPresenter<NoteView> {
             //TODO set default status
             getViewState().updateStatusBtn(NoteStatus.ALWAYS.getStringVal());
         }
+    }
+
+    public void updateNotify(){
+        getViewState().updateNotify(mNote.getNotify());
+    }
+
+    public void nofifyStatusChanged(boolean isChecked){
+        mNote.setNotify(isChecked);
     }
 
     public Date getDate() {

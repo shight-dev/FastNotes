@@ -3,6 +3,8 @@ package com.cougar.maksim.fastnotes.services;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +26,6 @@ public class NoteNotificationService extends IntentService {
     private static final String TAG = "NoteService";
     private static final String NOTE_NOTIFICATION_CHANNEL_ID = "NoteChannel";
     private static final int NOTIFICATION_ID = 0;
-    private static final int NOTIFICATION_CHANNEL_ID = 0;
     private static final int INTERVAL = 1000 * 60; //60 seconds
 
     public NoteNotificationService() {
@@ -53,25 +54,29 @@ public class NoteNotificationService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         NoteLab noteLab = NoteLab.get(this);
-        List<Note> noteList = noteLab.getTodayNotes();
+        List<Note> noteList = noteLab.getActualNotes();
         int listSize = noteList.size();
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
 
         //TODO check current sdk version and create (must be 26 or above)
-        /*CharSequence name = getString(R.string.notification_channel_name);
+        CharSequence name = getString(R.string.notification_channel_name);
         String description = getString(R.string.notification_channel_description);
-        int importance = NotificationManagerCompat.IMPORTANCE_LOW;
+        //int importance = NotificationManagerCompat.IMPORTANCE_LOW;
 
-        NotificationChannel notificationChannel = new NotificationChannel(NOTE_NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);*/
+        NotificationChannel notificationChannel = new NotificationChannel(NOTE_NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
+        notificationChannel.setDescription(description);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(notificationChannel);
 
         if (listSize > 0) {
-            //TODO rework with new arhitecture
+            //TODO rework with new architecture
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, NoteCombinedActivity.Companion.newIntent(this, true), 0);
             Notification notification;
             if (listSize != 1) {
                 //TODO may produce error with channel id
-                notification = new NotificationCompat.Builder(this/*, NOTE_NOTIFICATION_CHANNEL_ID*/)
+                notification = new NotificationCompat.Builder(this, NOTE_NOTIFICATION_CHANNEL_ID)
                         .setSmallIcon(android.R.drawable.presence_online)
                         .setContentTitle(getString(R.string.today_notes))
                         .setContentText("You have " + listSize + " notes!")
@@ -80,7 +85,7 @@ public class NoteNotificationService extends IntentService {
                         .setOngoing(true)
                         .build();
             } else {
-                notification = new NotificationCompat.Builder(this/*, NOTE_NOTIFICATION_CHANNEL_ID*/)
+                notification = new NotificationCompat.Builder(this, NOTE_NOTIFICATION_CHANNEL_ID)
                         .setSmallIcon(android.R.drawable.presence_online)
                         .setContentTitle(getString(R.string.today_notes))
                         .setContentText("You have " + listSize + " note!")

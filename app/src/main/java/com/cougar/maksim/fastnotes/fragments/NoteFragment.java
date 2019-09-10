@@ -12,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
@@ -28,8 +30,9 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
     private EditText mTitleField;
     private EditText mDataField;
     private Button mSaveButton;
-    private Button mPickDateBtn;
-    private Button mSetStatusBtn;
+    private Switch mSwitch;
+    //private Button mPickDateBtn;
+    //private Button mSetStatusBtn;
 
     //TODO не происходит inject
     @InjectPresenter
@@ -83,13 +86,15 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
         mTitleField = v.findViewById(R.id.note_title);
         mDataField = v.findViewById(R.id.note_data);
         mSaveButton = v.findViewById(R.id.saveBtn);
-        mPickDateBtn = v.findViewById(R.id.setDateBtn);
-        mSetStatusBtn = v.findViewById(R.id.setStatusBtn);
+        mSwitch = v.findViewById(R.id.notifySwitch);
+        //mPickDateBtn = v.findViewById(R.id.setDateBtn);
+        //mSetStatusBtn = v.findViewById(R.id.setStatusBtn);
 
         mNotePresenter.updateTitleView();
         mNotePresenter.updateDataView();
         mNotePresenter.updateDateView();
         mNotePresenter.updateStatusView();
+        mNotePresenter.updateNotify();
 
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -132,27 +137,11 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
                 saveDataAndExit();
             }
         });
-        mPickDateBtn.setOnClickListener(new View.OnClickListener() {
 
+        mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager != null) {
-                    DatePickerFragment datePickerFragment = DatePickerFragment.newInstance(mNotePresenter.getDate());
-                    datePickerFragment.setTargetFragment(NoteFragment.this, REQUEST_DATE);
-                    datePickerFragment.show(fragmentManager, DIALOG_DATE);
-                }
-            }
-        });
-        mSetStatusBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getFragmentManager();
-                if (fragmentManager != null) {
-                    StatusFragment statusFragment = StatusFragment.Companion.newInstance(mNotePresenter.getStatus());
-                    statusFragment.setTargetFragment(NoteFragment.this, REQUEST_STATUS);
-                    statusFragment.show(fragmentManager, DIALOG_STATUS);
-                }
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mNotePresenter.nofifyStatusChanged(isChecked);
             }
         });
 
@@ -171,12 +160,12 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
 
     @Override
     public void updateDateBtn(@NonNull String s) {
-        mPickDateBtn.setText(s);
+        //mPickDateBtn.setText(s);
     }
 
     @Override
     public void updateStatusBtn(@NonNull String s) {
-        mSetStatusBtn.setText(s);
+        //mSetStatusBtn.setText(s);
     }
 
     @Override
@@ -187,6 +176,11 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
     @Override
     public void updateData(@NonNull String s) {
         mDataField.setText(s);
+    }
+
+    @Override
+    public void updateNotify(boolean b) {
+        mSwitch.setChecked(b);
     }
 
     public interface OnNoteFragmentInteractionListener {

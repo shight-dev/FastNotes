@@ -29,6 +29,9 @@ public class Note {
     @ColumnInfo(name = "status")
     private NoteStatus mStatus;
 
+    @ColumnInfo(name = "notify")
+    private Boolean mNotify;
+
     @Ignore
     public Note() {
         id =UUID.randomUUID();
@@ -72,5 +75,13 @@ public class Note {
 
     public void setStatus(NoteStatus mStatus) {
         this.mStatus = mStatus;
+    }
+
+    public Boolean getNotify() {
+        return mNotify;
+    }
+
+    public void setNotify(Boolean mNotify) {
+        this.mNotify = mNotify;
     }
 }

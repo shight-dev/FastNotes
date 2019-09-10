@@ -96,7 +96,7 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
             return noteLab.getNotes();
         }
         else {
-            return noteLab.getTodayNotes();
+            return noteLab.getActualNotes();
         }
     }
 

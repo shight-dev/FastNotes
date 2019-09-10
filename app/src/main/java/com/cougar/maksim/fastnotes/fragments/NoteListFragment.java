@@ -152,6 +152,7 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
     public void updateUI() {
         //TODO move to presenter
         List<Note> notes = mNoteListPresenter.getNotes();
+        mNoteListPresenter.updateMenu();
 
         if (mAdapter == null) {
             mAdapter = new NoteAdapter(notes);

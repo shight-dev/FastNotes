@@ -59,6 +59,10 @@ public class NoteLab {
                 NoteStatus.AT_DAY.toString(), NoteStatus.ALWAYS.toString(), NoteStatus.ALL_BEFORE_DATE.toString());
     }
 
+    public List<Note> getActualNotes(){
+        return noteDb.notesDao().getActualNotes();
+    }
+
     public Note getNote(UUID id) {
         return noteDb.notesDao().getNote(id);
     }

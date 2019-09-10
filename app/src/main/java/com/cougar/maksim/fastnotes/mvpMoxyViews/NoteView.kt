@@ -7,4 +7,5 @@ interface NoteView : MvpView {
     fun updateStatusBtn(s: String)
     fun updateTitle(s: String)
     fun updateData(s: String)
+    fun updateNotify(b: Boolean)
 }

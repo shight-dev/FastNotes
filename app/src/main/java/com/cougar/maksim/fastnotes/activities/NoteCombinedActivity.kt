@@ -40,10 +40,10 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
 
     //создает стартовый фрагмент
     override fun createStartFragment(todayEvents: Boolean): Fragment {
-        return if (!(intent.getBooleanExtra(TODAY_EVENTS, false) || todayEvents)) {
-            NoteListFragment.newInstance(false)
-        } else {
+        return if (todayEvents) {
             NoteListFragment.newInstance(true)
+        } else {
+            NoteListFragment.newInstance(false)
         }
     }
 
@@ -64,12 +64,14 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     }
 
     //устанавливает стартовый фрагмент в контейнер в зависимости от ориентации
-    override fun setStartFragment(todayEvents: Boolean) {
+    override fun setStartFragment(todayEvents: Boolean, intent: Intent?) {
         setMenuItemsVisibility(true)
+        val actualEvents: Boolean = (intent?.getBooleanExtra(TODAY_EVENTS, false) ?: false)
+                || todayEvents
         if (!landscape) {
-            setStartFragmentToContainer(R.id.single_fragment_container, todayEvents)
+            setStartFragmentToContainer(R.id.single_fragment_container, actualEvents)
         } else {
-            setStartFragmentToContainer(R.id.main_fragment_container, todayEvents)
+            setStartFragmentToContainer(R.id.main_fragment_container, actualEvents)
             removeFragmentFromContainer(NoteFragment::class.java)
         }
     }
@@ -158,10 +160,15 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         } else {
             mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_menu_search)
         }
-        setStartFragment(todayEvents)
+        setStartFragment(todayEvents, null)
     }
 
-    private fun setMenuItemsVisibility(visible:Boolean){
+    //устанавливает значения флага при получении внешнего интента
+    override fun setTodayEvent(intent: Intent?) {
+        combinedPresenter.mTodayEvents= intent?.getBooleanExtra(TODAY_EVENTS,false) ?: false
+    }
+
+    private fun setMenuItemsVisibility(visible: Boolean) {
         mMenu?.findItem(R.id.menu_item_today_events)?.isVisible = visible
         mMenu?.findItem(R.id.menu_item_new_note)?.isVisible = visible
     }

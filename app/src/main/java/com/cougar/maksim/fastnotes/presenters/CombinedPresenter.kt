@@ -11,7 +11,7 @@ class CombinedPresenter : MvpPresenter<CombinedView>() {
     var mTodayEvents: Boolean = false
 
     fun onNoteFragmentInteraction() {
-        viewState.setStartFragment(mTodayEvents)
+        viewState.setStartFragment(mTodayEvents, null)
     }
 
     fun onNoteListFragmentInteraction(id: UUID?) {

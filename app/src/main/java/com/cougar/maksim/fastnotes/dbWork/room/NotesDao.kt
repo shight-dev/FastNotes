@@ -26,4 +26,7 @@ interface NotesDao {
     @Query("select * from Note where ((date = :dateStrVal) and (status = :atDay)) " +
             "or (status = :always) or ((date  >= :dateStrVal) and (status = :allBeforeDay))")
     fun getTodayNotes(dateStrVal: String, atDay: String, always: String, allBeforeDay: String): List<Note>
+
+    @Query("select * from Note where notify = 1")
+    fun getActualNotes():List<Note>
 }

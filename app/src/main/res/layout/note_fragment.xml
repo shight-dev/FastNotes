@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <EditText android:id="@+id/note_title"
@@ -9,16 +10,13 @@
     <EditText android:id="@+id/note_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/setStatusBtn"
+
+    <Switch
+        android:id="@+id/notifySwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/set_status"/>
-    <Button
-        android:id="@+id/setDateBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/pick_date"/>
+        android:text="Notify"
+        tools:checked="false" />
 
     <Button
         android:id="@+id/saveBtn"
