@@ -1,6 +1,7 @@
 package com.cougar.maksim.fastnotes.presenters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 
 import com.arellomobile.mvp.InjectViewState;
@@ -15,6 +16,8 @@ import java.util.List;
 import java.util.UUID;
 
 //TODO fix dependency
+import javax.inject.Inject;
+
 import static com.cougar.maksim.fastnotes.fragments.NoteListFragment.DELETE_NOTE;
 
 @InjectViewState
@@ -23,9 +26,15 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
     private boolean mTodayEvents;
     private UUID mInUpdate;
 
+    @Inject
+    public NoteLab noteLab;
+
+    @Inject
+    public Context context;
 
     public NoteListPresenter() {
         //this.mView = mView;
+        App.getComponent().inject(this);
         mTodayEvents = false;
         mInUpdate = null;
     }
@@ -79,15 +88,15 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
     }
 
     public void startNotifications() {
-        NoteNotificationService.setServiceAlarm(App.getAppContext(), true);
+        NoteNotificationService.setServiceAlarm(context, true);
     }
 
     public List<Note> getNotes() {
         if(!mTodayEvents) {
-            return NoteLab.get(App.getAppContext()).getNotes();
+            return noteLab.getNotes();
         }
         else {
-            return NoteLab.get(App.getAppContext()).getTodayNotes();
+            return noteLab.getTodayNotes();
         }
     }
 

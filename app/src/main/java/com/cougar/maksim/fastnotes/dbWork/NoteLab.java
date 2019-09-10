@@ -24,7 +24,7 @@ public class NoteLab {
         return sNoteLab;
     }
 
-    private NoteLab(Context context) {
+    public NoteLab(Context context) {
         //TODO work async
         noteDb = Room.databaseBuilder(context, NoteDb.class, "noteDb")
                 .allowMainThreadQueries()
