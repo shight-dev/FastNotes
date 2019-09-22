@@ -18,12 +18,12 @@ import com.cougar.maksim.fastnotes.dataClasses.Note;
 import com.cougar.maksim.fastnotes.dbWork.NoteLab;
 import com.cougar.maksim.fastnotes.R;
 
+import java.util.Arrays;
 import java.util.List;
 
 
 public class NoteNotificationService extends IntentService {
 
-    private static final String TAG = "NoteService";
     private static final String NOTE_NOTIFICATION_CHANNEL_ID = "NoteChannel";
     private static final int NOTIFICATION_ID = 0;
     private static final int INTERVAL = 1000 * 60; //60 seconds
@@ -71,31 +71,20 @@ public class NoteNotificationService extends IntentService {
         notificationManager.createNotificationChannel(notificationChannel);
 
         if (listSize > 0) {
-            //TODO rework with new architecture
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, NoteCombinedActivity.Companion.newIntent(this, true), 0);
             Notification notification;
-            if (listSize != 1) {
-                //TODO may produce error with channel id
-                notification = new NotificationCompat.Builder(this, NOTE_NOTIFICATION_CHANNEL_ID)
-                        .setSmallIcon(android.R.drawable.presence_online)
-                        .setContentTitle(getString(R.string.today_notes))
-                        .setContentText("You have " + listSize + " notes!")
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(false)
-                        .setOngoing(true)
-                        .build();
-            } else {
-                notification = new NotificationCompat.Builder(this, NOTE_NOTIFICATION_CHANNEL_ID)
-                        .setSmallIcon(android.R.drawable.presence_online)
-                        .setContentTitle(getString(R.string.today_notes))
-                        .setContentText("You have " + listSize + " note!")
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(false)
-                        .setOngoing(true)
-                        .build();
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTE_NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(android.R.drawable.presence_online)
+                    .setContentTitle(getString(R.string.today_notes))
+                    .setContentIntent(pendingIntent)
+                    .setContentText("You have actual notes!")
+                    .setAutoCancel(false)
+                    .setOngoing(false);
+            notification = builder.build();
+            boolean isActive = Arrays.stream(notificationManager.getActiveNotifications()).anyMatch(activeNotification -> activeNotification.getId()== NOTIFICATION_ID);
+            if(!isActive) {
+                notificationManagerCompat.notify(NOTIFICATION_ID, notification);
             }
-
-            notificationManagerCompat.notify(NOTIFICATION_ID, notification);
         } else {
             notificationManagerCompat.cancel(NOTIFICATION_ID);
         }
