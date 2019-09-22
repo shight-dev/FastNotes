@@ -8,6 +8,7 @@ import android.view.MenuItem
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
+import com.cougar.maksim.fastnotes.AppState
 import com.cougar.maksim.fastnotes.fragments.NoteFragment
 import com.cougar.maksim.fastnotes.fragments.NoteListFragment
 import com.cougar.maksim.fastnotes.R
@@ -39,12 +40,8 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     }
 
     //создает стартовый фрагмент
-    override fun createStartFragment(todayEvents: Boolean): Fragment {
-        return if (todayEvents) {
-            NoteListFragment.newInstance(true)
-        } else {
-            NoteListFragment.newInstance(false)
-        }
+    override fun createStartFragment(): Fragment {
+        return NoteListFragment.newInstance()
     }
 
     //создает второй фрагмент
@@ -64,14 +61,15 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     }
 
     //устанавливает стартовый фрагмент в контейнер в зависимости от ориентации
-    override fun setStartFragment(todayEvents: Boolean, intent: Intent?) {
+    override fun setStartFragment(intent: Intent?) {
         setMenuItemsVisibility(true)
         val actualEvents: Boolean = (intent?.getBooleanExtra(TODAY_EVENTS, false) ?: false)
-                || todayEvents
+                || AppState.actualNotes
+        AppState.actualNotes = actualEvents
         if (!landscape) {
-            setStartFragmentToContainer(R.id.single_fragment_container, actualEvents)
+            setStartFragmentToContainer(R.id.single_fragment_container)
         } else {
-            setStartFragmentToContainer(R.id.main_fragment_container, actualEvents)
+            setStartFragmentToContainer(R.id.main_fragment_container)
             removeFragmentFromContainer(NoteFragment::class.java)
         }
     }
@@ -88,10 +86,10 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     }
 
     //устанавливает стартовый фрагмент в определенный контейнер
-    private fun setStartFragmentToContainer(containerId: Int, todayEvents: Boolean = false) {
+    private fun setStartFragmentToContainer(containerId: Int) {
         val fm = supportFragmentManager
         fm.beginTransaction()
-                .replace(containerId, createStartFragment(todayEvents))
+                .replace(containerId, createStartFragment())
                 .commit()
     }
 
@@ -160,12 +158,12 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         } else {
             mMenu?.findItem(R.id.menu_item_today_events)?.setIcon(android.R.drawable.ic_menu_search)
         }
-        setStartFragment(todayEvents, null)
+        setStartFragment(null)
     }
 
     //устанавливает значения флага при получении внешнего интента
     override fun setTodayEvent(intent: Intent?) {
-        combinedPresenter.mTodayEvents= intent?.getBooleanExtra(TODAY_EVENTS,false) ?: false
+        AppState.actualNotes= intent?.getBooleanExtra(TODAY_EVENTS,AppState.actualNotes) ?: AppState.actualNotes
     }
 
     private fun setMenuItemsVisibility(visible: Boolean) {

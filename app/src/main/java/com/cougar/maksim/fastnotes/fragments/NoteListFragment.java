@@ -50,30 +50,13 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
 
     private OnNoteListFragmentInteractionListener listener = null;
 
-    public static NoteListFragment newInstance(boolean todayEvents) {
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(TODAY_EVENTS, todayEvents);
-
-        NoteListFragment noteListFragment = new NoteListFragment();
-        noteListFragment.setArguments(bundle);
-        return noteListFragment;
+    public static NoteListFragment newInstance() {
+        return new NoteListFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //App.getComponent().inject((NoteListActivity) getActivity());
-        //setHasOptionsMenu(true);
-        if (savedInstanceState != null) {
-            boolean todayEvents = savedInstanceState.getBoolean(TODAY_EVENTS, false);
-            mNoteListPresenter.setTodayEvents(todayEvents);
-
-        }
-        if (getArguments() != null) {
-            boolean todayEvents = getArguments().getBoolean(TODAY_EVENTS);
-            mNoteListPresenter.setTodayEvents(todayEvents);
-        }
-
         mNoteListPresenter.startNotifications();
     }
 

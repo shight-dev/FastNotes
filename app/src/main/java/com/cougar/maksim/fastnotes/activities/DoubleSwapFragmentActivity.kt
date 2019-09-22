@@ -12,13 +12,13 @@ abstract class DoubleSwapFragmentActivity : MvpAppCompatActivity() {
     var landscape: Boolean = false
 
     //создает начальный фрагмент
-    protected abstract fun createStartFragment(todayEvents :Boolean = false): Fragment
+    protected abstract fun createStartFragment(): Fragment
 
     //создает второй фрагмент
     protected abstract fun createSecondFragment(data: Any?): Fragment
 
     //устанавливает начальный фрагмент в контейнер
-    protected abstract fun setStartFragment(todayEvents: Boolean = false, intent: Intent? = null)
+    protected abstract fun setStartFragment(intent: Intent? = null)
 
     //устанавливает второй фрагмент в контейнер
     protected abstract fun setSecondFragment(data: Any?)
@@ -32,6 +32,6 @@ abstract class DoubleSwapFragmentActivity : MvpAppCompatActivity() {
         landscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
         setContentView(R.layout.swap_activity_fragment)
         setTodayEvent(intent)
-        setStartFragment(false, intent)
+        setStartFragment(intent)
     }
 }

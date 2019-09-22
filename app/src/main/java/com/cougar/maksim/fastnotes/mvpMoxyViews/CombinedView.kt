@@ -6,7 +6,7 @@ import com.arellomobile.mvp.viewstate.strategy.SkipStrategy
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType
 
 interface CombinedView : MvpView{
-    fun setStartFragment(todayEvents : Boolean, intent: Intent?)
+    fun setStartFragment(intent: Intent?)
     fun setSecondFragment(data: Any?)
 
     @StateStrategyType(SkipStrategy::class)

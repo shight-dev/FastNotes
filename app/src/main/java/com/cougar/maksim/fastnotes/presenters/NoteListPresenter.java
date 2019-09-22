@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
+import com.cougar.maksim.fastnotes.AppState;
 import com.cougar.maksim.fastnotes.daggerWork.App;
 import com.cougar.maksim.fastnotes.dataClasses.Note;
 import com.cougar.maksim.fastnotes.dbWork.NoteLab;
@@ -23,7 +24,6 @@ import static com.cougar.maksim.fastnotes.fragments.NoteListFragment.DELETE_NOTE
 @InjectViewState
 public class NoteListPresenter extends MvpPresenter<NoteListView> {
 
-    private boolean mTodayEvents;
     private UUID mInUpdate;
 
     @Inject
@@ -35,27 +35,27 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
     public NoteListPresenter() {
         //this.mView = mView;
         App.getComponent().inject(this);
-        mTodayEvents = false;
+        //mTodayEvents = false;
         mInUpdate = null;
     }
 
     public void setTodayEvents(boolean todayEvents) {
-        mTodayEvents = todayEvents;
+        AppState.State.setActualNotes(todayEvents);
     }
 
     public void changeTodayEvents() {
-        if (mTodayEvents) {
-            mTodayEvents = false;
+        if (AppState.State.getActualNotes()) {
+            AppState.State.setActualNotes(false);
             getViewState().setMenuItemSearch();
         } else {
-            mTodayEvents = true;
+            AppState.State.setActualNotes(true);
             getViewState().setMenuItemDelete();
         }
     }
 
     //TODO move to view
     public void updateMenu() {
-        if (mTodayEvents) {
+        if (AppState.State.getActualNotes()) {
             getViewState().setMenuItemDelete();
         } else {
             getViewState().setMenuItemSearch();
@@ -92,7 +92,7 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
     }
 
     public List<Note> getNotes() {
-        if(!mTodayEvents) {
+        if(!AppState.State.getActualNotes()) {
             return noteLab.getNotes();
         }
         else {
@@ -121,6 +121,6 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
     }
 
     public boolean getTodayEvents() {
-        return mTodayEvents;
+        return AppState.State.getActualNotes();
     }
 }
