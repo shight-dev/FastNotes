@@ -170,7 +170,6 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
 
         public TextView mTitleTextView;
         public TextView mContentNoteTextView;
-        public TextView mDateTextView;
         public ImageButton mDeleteItemBtn;
 
         private Note mNote;
@@ -179,7 +178,6 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
             super(itemView);
             mTitleTextView = itemView.findViewById(R.id.list_item_note_title);
             mContentNoteTextView = itemView.findViewById(R.id.list_item_note_text);
-            mDateTextView = itemView.findViewById(R.id.list_item_note_date);
             mDeleteItemBtn = itemView.findViewById(R.id.list_item_del_btn);
             itemView.setOnClickListener(this);
         }

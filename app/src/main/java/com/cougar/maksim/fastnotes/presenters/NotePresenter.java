@@ -27,6 +27,9 @@ public class NotePresenter extends MvpPresenter<NoteView> {
             if(id!=null) {
                 //TODO inject
                 mNote = NoteLab.get(App.getAppContext()).getNote(id);
+                if(mNote == null){
+                    getViewState().closeFragment();
+                }
             }
             else {
                 throw new RuntimeException("No id arg exception");
@@ -39,11 +42,15 @@ public class NotePresenter extends MvpPresenter<NoteView> {
     }
 
     public void setNoteTitle(String s) {
-        mNote.setTitle(s);
+        if(mNote != null) {
+            mNote.setTitle(s);
+        }
     }
 
     public void setNoteContent(String s) {
-        mNote.setData(s);
+        if(mNote != null) {
+            mNote.setData(s);
+        }
     }
 
     public void updateNote() {
@@ -55,22 +62,35 @@ public class NotePresenter extends MvpPresenter<NoteView> {
     }
 
     public void updateTitleView() {
-        getViewState().updateTitle(mNote.getTitle());
+        if(mNote != null) {
+            getViewState().updateTitle(mNote.getTitle());
+        }
     }
 
     public void updateDataView() {
-        getViewState().updateData(mNote.getData());
+        if(mNote != null) {
+            getViewState().updateData(mNote.getData());
+        }
     }
 
     public void updateNotify(){
-        getViewState().updateNotify(mNote.getNotify());
+        if(mNote != null) {
+            getViewState().updateNotify(mNote.getNotify());
+        }
     }
 
     public void nofifyStatusChanged(boolean isChecked){
-        mNote.setNotify(isChecked);
+        if(mNote != null) {
+            mNote.setNotify(isChecked);
+        }
     }
 
     public UUID getId() {
-        return mNote.getId();
+        if(mNote != null) {
+            return mNote.getId();
+        }
+        else {
+            return null;
+        }
     }
 }

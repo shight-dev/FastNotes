@@ -40,10 +40,6 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
 
     private static final String NEW_ITEM = "NEW_ITEM";
     private static final String NOTE_ID = "NOTE_ID";
-    private static final String DIALOG_DATE = "DialogDate";
-    private static final String DIALOG_STATUS = "DialogStatus";
-    public static final int REQUEST_DATE = 0;
-    public static final int REQUEST_STATUS = 1;
 
     private OnNoteFragmentInteractionListener listener = null;
 
@@ -87,8 +83,6 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
         mDataField = v.findViewById(R.id.note_data);
         mSaveButton = v.findViewById(R.id.saveBtn);
         mSwitch = v.findViewById(R.id.notifySwitch);
-        //mPickDateBtn = v.findViewById(R.id.setDateBtn);
-        //mSetStatusBtn = v.findViewById(R.id.setStatusBtn);
 
         mNotePresenter.updateTitleView();
         mNotePresenter.updateDataView();
@@ -170,8 +164,14 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
         mSwitch.setChecked(b);
     }
 
+    @Override
+    public void closeFragment() {
+        listener.closeFragment();
+    }
+
     public interface OnNoteFragmentInteractionListener {
         void onNoteFragmentInteraction();
+        void closeFragment();
     }
 
     @Override

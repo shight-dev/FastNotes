@@ -23,16 +23,13 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/list_item_note_title"
         />
-    <TextView android:id="@+id/list_item_note_date"
+
+    <ImageButton
+        android:id="@+id/list_item_del_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_toEndOf="@id/list_item_note_title"/>
-    <ImageButton android:id="@+id/list_item_del_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_toEndOf="@id/list_item_note_date"
+        android:layout_alignParentEnd="true"
         android:contentDescription="@string/delete_item"
-        android:src="@android:drawable/ic_delete"/>
+        android:src="@android:drawable/ic_delete" />
 </RelativeLayout>

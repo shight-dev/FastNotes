@@ -3,6 +3,7 @@ package com.cougar.maksim.fastnotes.activities
 import android.content.Context
 import android.content.Intent
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.view.Menu
 import android.view.MenuItem
 import com.arellomobile.mvp.presenter.InjectPresenter
@@ -37,6 +38,10 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
     //событие слушателя
     override fun onNoteListFragmentInteraction(id: UUID?) {
         combinedPresenter.onNoteListFragmentInteraction(id)
+    }
+
+    override fun closeFragment() {
+        removeFragmentFromContainer(NoteFragment::class.java)
     }
 
     //создает стартовый фрагмент
