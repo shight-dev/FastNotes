@@ -164,14 +164,8 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
         mSwitch.setChecked(b);
     }
 
-    @Override
-    public void closeFragment() {
-        listener.closeFragment();
-    }
-
     public interface OnNoteFragmentInteractionListener {
         void onNoteFragmentInteraction();
-        void closeFragment();
     }
 
     @Override

@@ -7,5 +7,4 @@ interface NoteView : MvpView {
     fun updateTitle(s: String)
     fun updateData(s: String)
     fun updateNotify(b: Boolean)
-    fun closeFragment()
 }

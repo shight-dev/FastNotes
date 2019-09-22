@@ -40,8 +40,8 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         combinedPresenter.onNoteListFragmentInteraction(id)
     }
 
-    override fun closeFragment() {
-        removeFragmentFromContainer(NoteFragment::class.java)
+    override fun closeEditFragmentIfExist(id: UUID?) {
+        removeEditFragmentIfExist(id, NoteFragment::class.java)
     }
 
     //создает стартовый фрагмент
@@ -100,6 +100,14 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
 
     //устанавливает второй фрагмент в определенный контейнер
     private fun setSecondFragmentToContainer(data: Any?, containerId: Int) {
+        //TODO remove boilerplate
+        var id: UUID? = null
+        data?.let {
+            if (data is UUID) {
+                id = data
+            }
+        }
+        combinedPresenter.editFragmentOpen(id)
         val fm = supportFragmentManager
         fm.beginTransaction()
                 .replace(containerId, createSecondFragment(data))
@@ -114,6 +122,12 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
             fm.beginTransaction()
                     .remove(it)
                     .commit()
+        }
+    }
+
+    private fun removeEditFragmentIfExist(id:UUID?, fragmentClass: Class<out Fragment>){
+        if(combinedPresenter.getId()?.equals(id) == true) {
+            removeFragmentFromContainer(fragmentClass)
         }
     }
 

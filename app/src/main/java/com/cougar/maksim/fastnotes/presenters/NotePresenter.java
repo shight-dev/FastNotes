@@ -27,9 +27,6 @@ public class NotePresenter extends MvpPresenter<NoteView> {
             if(id!=null) {
                 //TODO inject
                 mNote = NoteLab.get(App.getAppContext()).getNote(id);
-                if(mNote == null){
-                    getViewState().closeFragment();
-                }
             }
             else {
                 throw new RuntimeException("No id arg exception");

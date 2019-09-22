@@ -157,6 +157,11 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mNoteListPresenter.onActivityResult(requestCode, resultCode, data);
+        //TODO проверять result code
+        if(requestCode == DELETE_NOTE) {
+            UUID id = (UUID) data.getSerializableExtra("id");
+            listener.closeEditFragmentIfExist(id);
+        }
     }
 
     @Override
@@ -243,6 +248,7 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
 
     public interface OnNoteListFragmentInteractionListener {
         void onNoteListFragmentInteraction(UUID id);
+        void closeEditFragmentIfExist(UUID id);
     }
 
     @Override

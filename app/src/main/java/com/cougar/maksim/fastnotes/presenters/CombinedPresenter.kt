@@ -9,6 +9,8 @@ import java.util.*
 @InjectViewState
 class CombinedPresenter : MvpPresenter<CombinedView>() {
 
+    private var id:UUID? = null;
+
     fun onNoteFragmentInteraction() {
         viewState.setStartFragment(null)
     }
@@ -24,5 +26,13 @@ class CombinedPresenter : MvpPresenter<CombinedView>() {
 
     fun onRestoreInstance(){
         viewState.updateMenu(AppState.actualNotes)
+    }
+
+    fun editFragmentOpen(id:UUID?){
+        this.id = id
+    }
+
+    fun getId():UUID?{
+        return id
     }
 }
