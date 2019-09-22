@@ -8,8 +8,6 @@ import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -24,10 +22,6 @@ public class Note {
     private String mTitle;
     @ColumnInfo(name = "data")
     private String mData;
-    @ColumnInfo(name = "date")
-    private Date mDate;
-    @ColumnInfo(name = "status")
-    private NoteStatus mStatus;
 
     @ColumnInfo(name = "notify")
     private Boolean mNotify;
@@ -49,14 +43,6 @@ public class Note {
         return mData;
     }
 
-    public Date getDate() {
-        return mDate;
-    }
-
-    public NoteStatus getStatus() {
-        return mStatus;
-    }
-
     public UUID getId() {
         return id;
     }
@@ -67,14 +53,6 @@ public class Note {
 
     public void setData(String data) {
         mData = data;
-    }
-
-    public void setDate(Date date) {
-        this.mDate = date;
-    }
-
-    public void setStatus(NoteStatus mStatus) {
-        this.mStatus = mStatus;
     }
 
     public Boolean getNotify() {

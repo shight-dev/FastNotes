@@ -34,18 +34,4 @@ class Converters {
     fun longToDate(long: Long): Date {
         return Date(long)
     }
-
-    @TypeConverter
-    fun statusToString(status: NoteStatus): String {
-        return status.toString()
-    }
-
-    @TypeConverter
-    fun stringToStatus(string: String?): NoteStatus {
-        return try {
-            NoteStatus.valueOf(string ?: NoteStatus.NEVER.toString())
-        } catch (e: Exception) {
-            NoteStatus.NEVER
-        }
-    }
 }

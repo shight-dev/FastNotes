@@ -10,6 +10,7 @@ import java.util.*
 class CombinedPresenter : MvpPresenter<CombinedView>() {
 
     fun onNoteFragmentInteraction() {
+        viewState.setStartFragment(null)
     }
 
     fun onNoteListFragmentInteraction(id: UUID?) {

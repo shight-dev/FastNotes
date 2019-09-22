@@ -92,8 +92,6 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
 
         mNotePresenter.updateTitleView();
         mNotePresenter.updateDataView();
-        mNotePresenter.updateDateView();
-        mNotePresenter.updateStatusView();
         mNotePresenter.updateNotify();
 
         mTitleField.addTextChangedListener(new TextWatcher() {
@@ -148,19 +146,8 @@ public class NoteFragment extends MvpAppCompatFragment implements NoteView {
         return v;
     }
 
-    //вызывается дочерними фрагментами
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mNotePresenter.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void saveDataAndExit() {
         listener.onNoteFragmentInteraction();
-    }
-
-    @Override
-    public void updateDateBtn(@NonNull String s) {
-        //mPickDateBtn.setText(s);
     }
 
     @Override

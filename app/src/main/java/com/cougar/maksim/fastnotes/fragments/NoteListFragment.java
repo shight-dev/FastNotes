@@ -189,8 +189,6 @@ public class NoteListFragment extends MvpAppCompatFragment implements NoteListVi
             mTitleTextView.setText(note.getTitle());
             mContentNoteTextView.setText(note.getData());
 
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-            mDateTextView.setText(dateFormat.format(note.getDate()));
             mDeleteItemBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
