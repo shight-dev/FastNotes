@@ -22,9 +22,6 @@ class NoteCombinedActivity : DoubleSwapFragmentActivity(),
         NoteListFragment.OnNoteListFragmentInteractionListener,
         NoteFragment.OnNoteFragmentInteractionListener {
 
-    //TODO поворот экрана при открытой заметке возвращает начальное состояние активити
-    //TODO не пересоздавать фрагменты
-
     @InjectPresenter
     lateinit var combinedPresenter: CombinedPresenter
 

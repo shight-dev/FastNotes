@@ -88,7 +88,7 @@ public class NoteListPresenter extends MvpPresenter<NoteListView> {
     }
 
     public void startNotifications() {
-        NoteNotificationService.setServiceAlarm(context, true);
+        NoteNotificationService.setServiceAlarm(context);
     }
 
     public List<Note> getNotes() {

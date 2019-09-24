@@ -8,17 +8,18 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import com.cougar.maksim.fastnotes.AppState;
 import com.cougar.maksim.fastnotes.activities.NoteCombinedActivity;
 import com.cougar.maksim.fastnotes.dataClasses.Note;
 import com.cougar.maksim.fastnotes.dbWork.NoteLab;
 import com.cougar.maksim.fastnotes.R;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -37,14 +38,15 @@ public class NoteNotificationService extends IntentService {
         return new Intent(context, NoteNotificationService.class);
     }
 
-    public static void setServiceAlarm(Context context, boolean isWorking) {
+    public static void setServiceAlarm(Context context) {
         Intent intent = NoteNotificationService.newIntent(context);
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (isWorking) {
-            alarmManager.setInexactRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime()
-                    , INTERVAL, pendingIntent);
+        if (AppState.State.getNotificationsEnable()) {
+            /*alarmManager.setInexactRepeating(AlarmManager.RTC, SystemClock.elapsedRealtime()
+                    , INTERVAL, pendingIntent);*/
+            alarmManager.set(AlarmManager.RTC, Calendar.getInstance().getTimeInMillis()+INTERVAL,pendingIntent);
         } else {
             alarmManager.cancel(pendingIntent);
             pendingIntent.cancel();
@@ -59,10 +61,8 @@ public class NoteNotificationService extends IntentService {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
 
-        //TODO check current sdk version and create (must be 26 or above)
         CharSequence name = getString(R.string.notification_channel_name);
         String description = getString(R.string.notification_channel_description);
-        //int importance = NotificationManagerCompat.IMPORTANCE_LOW;
 
         NotificationChannel notificationChannel = new NotificationChannel(NOTE_NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT);
         notificationChannel.setDescription(description);
@@ -88,5 +88,7 @@ public class NoteNotificationService extends IntentService {
         } else {
             notificationManagerCompat.cancel(NOTIFICATION_ID);
         }
+        //устанавливает очередное уведомление, повторяющиеся уведомления могут быть сброшены системой
+        setServiceAlarm(this);
     }
 }
